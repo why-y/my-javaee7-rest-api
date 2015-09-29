@@ -20,7 +20,6 @@ import java.util.UUID;
 import javax.ejb.EJB;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
