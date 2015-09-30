@@ -8,7 +8,6 @@ package ch.gry.myjavaee7project1.books.boundary;
 import ch.gry.rest.exception.ResourceNotFoundException;
 import ch.gry.myjavaee7project1.books.model.Book;
 import java.util.Collection;
-import java.util.UUID;
 import javax.ejb.Local;
 
 /**
@@ -37,7 +36,7 @@ public interface BookService {
      * @return
      * @throws ch.gry.rest.exception.ResourceNotFoundException
      */
-    public Book getBook(final UUID id) throws ResourceNotFoundException;
+    public Book getBook(final Long id) throws ResourceNotFoundException;
     
     /**
      *
@@ -51,7 +50,7 @@ public interface BookService {
      * @param id
      * @throws ch.gry.rest.exception.ResourceNotFoundException
      */
-    public void deleteBook(final UUID id) throws ResourceNotFoundException;
+    public void deleteBook(final Long id) throws ResourceNotFoundException;
 
     /**
      *

@@ -11,7 +11,7 @@ package ch.gry.myjavaee7project1.rest.resource;
  */
 public enum BookJsonKey {
 
-    TITLE("title"), AUTHOR("author"), HREF("href"), IBAN("iban");
+    ID("id"), TITLE("title"), AUTHOR("author"), HREF("href"), IBAN("iban");
     private final String key;
 
     private BookJsonKey(String key) {
@@ -24,6 +24,8 @@ public enum BookJsonKey {
 
     public static BookJsonKey byString(String key) {
         switch (key) {
+            case "id" :
+                return ID;
             case "title":
                 return TITLE;
             case "author":

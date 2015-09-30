@@ -11,10 +11,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.UUID;
 import java.util.logging.Logger;
 import javax.json.Json;
+import javax.json.JsonNumber;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -40,9 +41,8 @@ public class BookJsonProvider implements MessageBodyReader<Book>, MessageBodyWri
     private Logger logger = Logger.getLogger(BookJsonProvider.class.getName());
     
     @Context
-    private UriInfo uriInfo;
-
-
+    UriInfo uriInfo;
+    
     @Override
     public boolean isReadable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
         logger.info(String.format("     >>> BookJsonProvider::isReadable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
@@ -53,7 +53,8 @@ public class BookJsonProvider implements MessageBodyReader<Book>, MessageBodyWri
     public Book readFrom(Class<Book> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, String> mm, InputStream in) throws IOException, WebApplicationException {
         logger.info(String.format("     >>> BookJsonProvider::readFrom(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
         JsonObject jsonObj = Json.createReader(in).readObject();
-        JsonString id = jsonObj.getJsonString(BookJsonKey.HREF.getKey());
+        
+        JsonNumber id = jsonObj.getJsonNumber(BookJsonKey.ID.getKey());
         if(id==null) {
             throw new BadRequestException("Could not parse id!");
         }
@@ -73,9 +74,14 @@ public class BookJsonProvider implements MessageBodyReader<Book>, MessageBodyWri
             throw new BadRequestException("Could not parse iban!");
         }
         
+        JsonString href = jsonObj.getJsonString(BookJsonKey.HREF.getKey());
+        if(href==null) {
+//            throw new BadRequestException("Could not parse HREF!");            
+        }
+        
         Book book = new Book();
         
-        book.setId(id.getString().isEmpty() ? null : UUID.fromString(id.getString()));
+        book.setId(id.longValue());
         book.setTitle(title.getString());
         book.setAuthor(author.getString());
         book.setIban(iban.getString());
@@ -98,16 +104,22 @@ public class BookJsonProvider implements MessageBodyReader<Book>, MessageBodyWri
     @Override
     public void writeTo(Book book, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< BookJsonProvider::writeTo(..) -----> book: %s, type:%s, type1:%s, antns:%s, mt:%s", book, type, type1, antns, mt));
-        JsonObject jsonObject = Json.createObjectBuilder().
-                add(BookJsonKey.HREF.getKey(), book.getId() != null ? buildHref("books", book.getId().toString()) : "").
+        JsonObject jsonObject = toJson(book, uriInfo);
+        out.write(jsonObject.toString().getBytes("UTF-8"));
+    }
+    
+    protected static JsonObject toJson(final Book book, final UriInfo uriInfo) {
+        return Json.createObjectBuilder().
+                add(BookJsonKey.ID.getKey(), book.getId() != null ? book.getId().toString() : "").
+                add(BookJsonKey.HREF.getKey(), book.getId() != null ? buildHref("books", book.getId(), uriInfo) : "").
                 add(BookJsonKey.TITLE.getKey(), book.getTitle() != null ? book.getTitle() : "").
                 add(BookJsonKey.AUTHOR.getKey(), book.getAuthor() != null ? book.getAuthor() : "").
                 add(BookJsonKey.IBAN.getKey(), book.getIban() != null ? book.getIban() : "").
                 build();
-        out.write(jsonObject.toString().getBytes("UTF8"));
+        
     }
 
-    private String buildHref(final String resource, final String id) {
+    private static String buildHref(final String resource, final Long id, final UriInfo uriInfo) {
         assert resource != null : "Argument resource must not be null!";
         assert id != null : "Argument id must not be null!";
         return String.format("%s%s/%s", uriInfo.getBaseUri(), resource, id);

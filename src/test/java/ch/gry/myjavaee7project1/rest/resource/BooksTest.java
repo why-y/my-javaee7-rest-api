@@ -5,8 +5,6 @@
  */
 package ch.gry.myjavaee7project1.rest.resource;
 
-import java.text.ParseException;
-import java.util.UUID;
 import ch.gry.myjavaee7project1.books.model.Book;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -24,12 +22,12 @@ import org.junit.Ignore;
  */
 public class BooksTest {
     
-    final static UUID UUID_1 = UUID.randomUUID();
+    final static Long ID_1 = new Long(77);
     final static String IBAN_1 = "823468";
     final static String AUTHOR_1 = "Evan Moore";
     final static String TITLE_1 = "The Real Book";
     final static JsonObject BOOK_1_JSON = Json.createObjectBuilder().
-            add("id", UUID_1.toString()).
+            add("id", ID_1.toString()).
             add("iban", IBAN_1).
             add("title", TITLE_1).
             add("author", AUTHOR_1).
@@ -43,7 +41,7 @@ public class BooksTest {
     @BeforeClass
     public static void setUpClass() {
         BOOK_1.setAuthor(AUTHOR_1);
-        BOOK_1.setId(UUID_1);
+        BOOK_1.setId(ID_1);
         BOOK_1.setIban(IBAN_1);
         BOOK_1.setTitle(TITLE_1);
     }

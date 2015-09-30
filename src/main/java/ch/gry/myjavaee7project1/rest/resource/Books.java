@@ -15,7 +15,6 @@ import javax.ws.rs.Path;
 import ch.gry.myjavaee7project1.books.model.Book;
 import ch.gry.rest.exception.ResourceNotFoundException;
 import java.util.Collection;
-import java.util.UUID;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -43,8 +42,6 @@ public class Books {
     @Produces(MediaType.APPLICATION_JSON)
     public Book createBook(final Book book) {
         logger.info("REST-POST: createBook()");
-        String jsonId;
-        UUID newId = null;
         return service.createBook(book);
     }
 
@@ -58,7 +55,7 @@ public class Books {
     @GET
     @Path("{bookId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Book getBook(@PathParam("bookId") final UUID bookId) {
+    public Book getBook(@PathParam("bookId") final Long bookId) {
         logger.info(String.format("REST-GET: getBook(%s)", bookId.toString()));
         try {
             return service.getBook(bookId);
@@ -70,7 +67,7 @@ public class Books {
     @PUT
     @Path("{bookId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void updateBook(@PathParam("bookId") final UUID bookId, final Book book) {
+    public void updateBook(@PathParam("bookId") final Long bookId, final Book book) {
         logger.info(String.format("REST-PUT: updateBook(%s)", bookId));
         try {
 
@@ -86,7 +83,7 @@ public class Books {
 
     @DELETE
     @Path("{bookId}")
-    public void deleteBook(@PathParam("bookId") final UUID bookId) {
+    public void deleteBook(@PathParam("bookId") final Long bookId) {
         logger.info(String.format("REST-DELETE: deleteBook(%s)", bookId));
         try {
             service.deleteBook(bookId);

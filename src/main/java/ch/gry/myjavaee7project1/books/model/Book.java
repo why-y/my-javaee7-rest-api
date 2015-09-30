@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Book implements Serializable {
     private static final long serialVersionUID = 1L;
     
-    private UUID id;
+    private Long id;
         
     private String title;
     private String author;
@@ -49,24 +49,23 @@ public class Book implements Serializable {
     }
     private String iban;
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 41 * hash + Objects.hashCode(this.id);
-        hash = 41 * hash + Objects.hashCode(this.title);
-        hash = 41 * hash + Objects.hashCode(this.author);
-        hash = 41 * hash + Objects.hashCode(this.iban);
+        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.title);
+        hash = 23 * hash + Objects.hashCode(this.author);
+        hash = 23 * hash + Objects.hashCode(this.iban);
         return hash;
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -92,51 +91,5 @@ public class Book implements Serializable {
         return true;
     }
 
-    
-
-    @Override
-    public String toString() {
-        return "model.Book[ id=" + id + " ]";
-    }
-    
-//    public static Book fromJson(JsonObject jsonObj) throws ParseException {
-//
-//        JsonString id = jsonObj.getJsonString("id");
-//        if(id==null) {
-//            throw new ParseException("Could not parse id!", 0);
-//        }
-//
-//        JsonString title = jsonObj.getJsonString("title");
-//        if(title==null) {
-//            throw new ParseException("Could not parse title!", 0);
-//        }
-//        
-//        JsonString author = jsonObj.getJsonString("author");
-//        if(author==null) {
-//            throw new ParseException("Could not parse author!", 0);
-//        }
-//        
-//        JsonString iban = jsonObj.getJsonString("iban");
-//        if(iban==null) {
-//            throw new ParseException("Could not parse iban!", 0);
-//        }
-//        
-//        Book book = new Book();
-//        
-//        book.setId(id.getString().isEmpty() ? null : UUID.fromString(id.getString()));
-//        book.setTitle(title.getString());
-//        book.setAuthor(author.getString());
-//        book.setIban(iban.getString());
-//        return book;
-//    }
-//
-//    public JsonObject asJson() {
-//        return Json.createObjectBuilder().
-//                add(JSON_KEY.ID.getKey(), this.id!=null ? this.id.toString() : "").
-//                add(JSON_KEY.TITLE.getKey(), this.title!=null ? this.title : "").
-//                add(JSON_KEY.AUTHOR.getKey(), this.author!=null?  this.author : "").
-//                add(JSON_KEY.IBAN.getKey(), this.iban!=null ? this.iban : "").
-//                build();
-//    }
     
 }

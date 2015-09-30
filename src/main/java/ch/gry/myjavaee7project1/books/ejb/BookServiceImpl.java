@@ -7,11 +7,12 @@ package ch.gry.myjavaee7project1.books.ejb;
 
 import ch.gry.myjavaee7project1.books.boundary.BookService;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import ch.gry.myjavaee7project1.books.model.Book;
 import ch.gry.rest.exception.ResourceNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 
 /**
@@ -22,7 +23,7 @@ import javax.ejb.Stateless;
 //@Default // this is the only default implementation of the BookService
 public class BookServiceImpl implements BookService{
     
-    Map<UUID, Book> books = new HashMap();
+    Map<Long, Book> books = new HashMap<>();
 
     /**
      *
@@ -31,7 +32,7 @@ public class BookServiceImpl implements BookService{
      */
     @Override
     public Book createBook(final Book newBook) {
-        UUID newId = UUID.randomUUID();
+        long newId = books.size() + 100;
         newBook.setId(newId);
         books.put(newId, newBook);
         return newBook;
@@ -43,7 +44,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public Book getBook(final UUID id) throws ResourceNotFoundException {
+    public Book getBook(final Long id) throws ResourceNotFoundException {
         if(!books.containsKey(id)) {
             throw new ResourceNotFoundException(String.format("Unknown book id %s!", id));
         }
@@ -61,7 +62,7 @@ public class BookServiceImpl implements BookService{
     }
     
     @Override
-    public void deleteBook(final UUID id) throws ResourceNotFoundException{
+    public void deleteBook(final Long id) throws ResourceNotFoundException{
         if(!books.containsKey(id)){
             throw new ResourceNotFoundException(String.format("Unknown book id %s! Cannot be deleted!", id));
         }
