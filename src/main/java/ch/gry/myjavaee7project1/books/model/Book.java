@@ -21,6 +21,9 @@ public class Book implements Serializable {
     private String title;
     private String author;
 
+    public Book() {
+    }
+
     public String getTitle() {
         return title;
     }

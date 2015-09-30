@@ -24,20 +24,28 @@ import org.junit.Ignore;
  */
 public class BooksTest {
     
-    final static String UUID_1 = "947e641b-11d3-4e04-9c9e-c64e90197803";
+    final static UUID UUID_1 = UUID.randomUUID();
     final static String IBAN_1 = "823468";
+    final static String AUTHOR_1 = "Evan Moore";
+    final static String TITLE_1 = "The Real Book";
     final static JsonObject BOOK_1_JSON = Json.createObjectBuilder().
-            add("id", UUID_1).
+            add("id", UUID_1.toString()).
             add("iban", IBAN_1).
-            add("title", "The Real Book").
-            add("author", "Evan Moore").
+            add("title", TITLE_1).
+            add("author", AUTHOR_1).
             build();
+    
+    final static Book BOOK_1 = new Book();
     
     public BooksTest() {
     }
     
     @BeforeClass
     public static void setUpClass() {
+        BOOK_1.setAuthor(AUTHOR_1);
+        BOOK_1.setId(UUID_1);
+        BOOK_1.setIban(IBAN_1);
+        BOOK_1.setTitle(TITLE_1);
     }
     
     @AfterClass
@@ -58,20 +66,11 @@ public class BooksTest {
     @Test
     @Ignore
     public void testCreateBook() {
-        System.out.println("createBook");
-        String title = "An Awsome Story";
-        String author = "Mark Zempala";
-        String iban = "29038";
-        String bookJson = "{\"id\":\"\"," + 
-                "\"title\":\"" + title + 
-                "\",\"author\":\"" + author + 
-                "\",\"iban\":\"" + iban + "\"}";
-        System.out.println(bookJson);
         Books resource = new Books();
         String expResult = "";
-        JsonObject result = resource.createBook(BOOK_1_JSON);
+        Book result = resource.createBook(BOOK_1);
         System.out.println(result.toString());
-        assertEquals(BOOK_1_JSON, result);
+        assertEquals(BOOK_1, result);
     }
    
 }
