@@ -22,8 +22,8 @@ public class Chapter implements Serializable {
     public Chapter() {
     }
 
-    public Chapter(Long id, String title, String text) {
-        this.id = id;
+    public Chapter(String title, String text) {
+        this.id = -1l;
         this.title = title;
         this.text = text;
     }

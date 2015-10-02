@@ -6,6 +6,8 @@
 package ch.gry.myjavaee7project1.books.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -19,10 +21,19 @@ public class Book implements Serializable {
         
     private String title;
     private String author;
+    private Map<Long, Chapter> chapters = new HashMap<>();
 
     public Book() {
     }
 
+    public Book(String title, String author, String iban) {
+        this.id = -1l;
+        this.title = title;
+        this.author = author;
+        this.iban = iban;
+    }
+
+    
     public String getTitle() {
         return title;
     }
@@ -56,13 +67,18 @@ public class Book implements Serializable {
         this.id = id;
     }
 
+    public Map<Long, Chapter> getChapters() {
+        return chapters;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 23 * hash + Objects.hashCode(this.id);
-        hash = 23 * hash + Objects.hashCode(this.title);
-        hash = 23 * hash + Objects.hashCode(this.author);
-        hash = 23 * hash + Objects.hashCode(this.iban);
+        int hash = 5;
+        hash = 89 * hash + Objects.hashCode(this.id);
+        hash = 89 * hash + Objects.hashCode(this.title);
+        hash = 89 * hash + Objects.hashCode(this.author);
+        hash = 89 * hash + Objects.hashCode(this.chapters);
+        hash = 89 * hash + Objects.hashCode(this.iban);
         return hash;
     }
 
@@ -84,11 +100,13 @@ public class Book implements Serializable {
         if (!Objects.equals(this.author, other.author)) {
             return false;
         }
+        if (!Objects.equals(this.chapters, other.chapters)) {
+            return false;
+        }
         if (!Objects.equals(this.iban, other.iban)) {
             return false;
         }
         return true;
     }
-
     
 }

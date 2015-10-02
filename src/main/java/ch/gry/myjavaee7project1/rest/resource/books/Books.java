@@ -29,7 +29,7 @@ import javax.ws.rs.PathParam;
 @Path("books")
 public class Books {
 
-    private Logger logger = Logger.getLogger(Books.class.getName());
+    private Logger logger = Logger.getLogger(getClass().getName());
 
 //    @Inject // how to properly use @Inject?
     @EJB
@@ -50,7 +50,7 @@ public class Books {
     @GET
     @Path("{bookId}")
     public Book getBook(@PathParam("bookId") final Long bookId) {
-        logger.info(String.format("REST-GET: getBook(%s)", bookId.toString()));
+        logger.info(String.format("REST-GET: getBook(%d)", bookId));
         try {
             return service.getBook(bookId);
         } catch (ResourceNotFoundException ex) {
@@ -61,7 +61,7 @@ public class Books {
     @PUT
     @Path("{bookId}")
     public void updateBook(@PathParam("bookId") final Long bookId, final Book book) {
-        logger.info(String.format("REST-PUT: updateBook(%s)", bookId));
+        logger.info(String.format("REST-PUT: updateBook(%d)", bookId));
         try {
 
             // Make sure to update the object with the id of the resource.
