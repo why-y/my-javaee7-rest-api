@@ -3,19 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.gry.myjavaee7project1.rest.resource;
+package ch.gry.myjavaee7project1.rest.resource.books.json;
 
 import ch.gry.myjavaee7project1.books.model.Book;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Logger;
-import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -25,6 +24,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 /**
  *
@@ -43,8 +43,17 @@ public class BooksJsonProvider implements MessageBodyWriter<Collection<Book>> {
 
     @Override
     public boolean isWriteable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
-        logger.info(String.format("     <<< BooksJsonProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
-        return Collection.class.isAssignableFrom(type);
+        
+        logger.info(String.format("     <<< BooksJsonProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1.getClass() + "-" + type1.getTypeName(), Arrays.toString(antns), mt));
+        // we expect a Collection of books, which is a Parameterized Type with one parameter type "Book"
+        if(type1 instanceof ParameterizedTypeImpl) {
+            ParameterizedTypeImpl parameterizedType = (ParameterizedTypeImpl) type1;
+            Type[] paramTypes = parameterizedType.getActualTypeArguments();
+            if(paramTypes.length==1 && paramTypes[0]==Book.class) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

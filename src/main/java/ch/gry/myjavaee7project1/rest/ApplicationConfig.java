@@ -29,10 +29,13 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(ch.gry.myjavaee7project1.rest.resource.BookJsonProvider.class);
-        resources.add(ch.gry.myjavaee7project1.rest.resource.BooksJsonProvider.class);
         resources.add(ch.gry.myjavaee7project1.rest.GreetingResource.class);
-        resources.add(ch.gry.myjavaee7project1.rest.resource.Books.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.books.json.BooksJsonProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.books.json.BookJsonProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.chapters.json.ChaptersJsonProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.chapters.json.ChapterJsonProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.books.Books.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.chapters.Chapters.class);
     }
     
 }

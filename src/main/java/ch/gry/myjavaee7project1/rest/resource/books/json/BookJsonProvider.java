@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.gry.myjavaee7project1.rest.resource;
+package ch.gry.myjavaee7project1.rest.resource.books.json;
 
 import ch.gry.myjavaee7project1.books.model.Book;
 import java.io.IOException;
@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -73,12 +72,7 @@ public class BookJsonProvider implements MessageBodyReader<Book>, MessageBodyWri
         if(iban==null) {
             throw new BadRequestException("Could not parse iban!");
         }
-        
-        JsonString href = jsonObj.getJsonString(BookJsonKey.HREF.getKey());
-        if(href==null) {
-//            throw new BadRequestException("Could not parse HREF!");            
-        }
-        
+                
         Book book = new Book();
         
         book.setId(id.longValue());

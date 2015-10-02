@@ -7,7 +7,6 @@ package ch.gry.myjavaee7project1.books.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  *

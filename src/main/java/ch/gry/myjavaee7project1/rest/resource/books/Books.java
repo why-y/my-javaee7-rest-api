@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.gry.myjavaee7project1.rest.resource;
+package ch.gry.myjavaee7project1.rest.resource.books;
 
 import ch.gry.myjavaee7project1.books.boundary.BookService;
 import java.util.logging.Logger;
@@ -13,16 +13,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import ch.gry.myjavaee7project1.books.model.Book;
+import ch.gry.myjavaee7project1.rest.resource.chapters.Chapters;
 import ch.gry.rest.exception.ResourceNotFoundException;
 import java.util.Collection;
 import javax.ejb.EJB;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -38,15 +36,12 @@ public class Books {
     BookService service;
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Book createBook(final Book book) {
         logger.info("REST-POST: createBook()");
         return service.createBook(book);
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Collection<Book> getBooks() {
         logger.info("REST-GET: getBooks()");
         return service.getBooks();
@@ -54,7 +49,6 @@ public class Books {
 
     @GET
     @Path("{bookId}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Book getBook(@PathParam("bookId") final Long bookId) {
         logger.info(String.format("REST-GET: getBook(%s)", bookId.toString()));
         try {
@@ -66,7 +60,6 @@ public class Books {
 
     @PUT
     @Path("{bookId}")
-    @Consumes(MediaType.APPLICATION_JSON)
     public void updateBook(@PathParam("bookId") final Long bookId, final Book book) {
         logger.info(String.format("REST-PUT: updateBook(%s)", bookId));
         try {
@@ -99,6 +92,14 @@ public class Books {
         return Json.createObjectBuilder().
                 add("numOfBooks", service.countBooks()).
                 build();
+    }
+    
+    
+    /////////// SUB-RESOURCES //////////////////////////////////////////////////
+    
+    @Path("{bookId}/chapters")
+    public Chapters getChaptersResource() {
+        return new Chapters();
     }
 
 }

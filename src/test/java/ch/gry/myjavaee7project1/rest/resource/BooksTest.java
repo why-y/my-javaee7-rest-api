@@ -5,6 +5,7 @@
  */
 package ch.gry.myjavaee7project1.rest.resource;
 
+import ch.gry.myjavaee7project1.rest.resource.books.Books;
 import ch.gry.myjavaee7project1.books.model.Book;
 import javax.json.Json;
 import javax.json.JsonObject;
