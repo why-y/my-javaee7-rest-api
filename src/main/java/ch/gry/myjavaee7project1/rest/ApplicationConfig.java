@@ -32,10 +32,10 @@ public class ApplicationConfig extends Application {
         resources.add(ch.gry.myjavaee7project1.rest.GreetingResource.class);
         resources.add(ch.gry.myjavaee7project1.rest.resource.books.Books.class);
         resources.add(ch.gry.myjavaee7project1.rest.resource.books.json.BookJsonProvider.class);
-        resources.add(ch.gry.myjavaee7project1.rest.resource.books.json.BooksJsonProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.books.json.BooksCollectionProvider.class);
         resources.add(ch.gry.myjavaee7project1.rest.resource.chapters.Chapters.class);
         resources.add(ch.gry.myjavaee7project1.rest.resource.chapters.json.ChapterJsonProvider.class);
-        resources.add(ch.gry.myjavaee7project1.rest.resource.chapters.json.ChaptersJsonProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.chapters.json.ChaptersCollectionJsonProvider.class);
     }
     
 }

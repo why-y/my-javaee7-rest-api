@@ -33,7 +33,7 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ChaptersJsonProvider  implements MessageBodyWriter<Collection<Chapter>>{
+public class ChaptersCollectionJsonProvider  implements MessageBodyWriter<Collection<Chapter>>{
 
     private static final Logger logger = Logger.getLogger(ChapterJsonProvider.class.getName());
 

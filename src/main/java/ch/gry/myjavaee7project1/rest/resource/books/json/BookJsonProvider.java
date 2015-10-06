@@ -6,13 +6,16 @@
 package ch.gry.myjavaee7project1.rest.resource.books.json;
 
 import ch.gry.myjavaee7project1.books.model.Book;
+import ch.gry.myjavaee7project1.rest.resource.books.Books;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.util.logging.Logger;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonString;
@@ -23,6 +26,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
@@ -38,7 +42,7 @@ import javax.ws.rs.ext.Provider;
 public class BookJsonProvider implements MessageBodyReader<Book>, MessageBodyWriter<Book> {
 
     private static final Logger logger = Logger.getLogger(BookJsonProvider.class.getName());
-    
+
     @Context
     UriInfo uriInfo;
     
@@ -105,18 +109,35 @@ public class BookJsonProvider implements MessageBodyReader<Book>, MessageBodyWri
     protected static JsonObject toJson(final Book book, final UriInfo uriInfo) {
         return Json.createObjectBuilder().
                 add(BookJsonKey.ID.getKey(), book.getId() != null ? book.getId().toString() : "").
-                add(BookJsonKey.HREF.getKey(), book.getId() != null ? buildHref("books", book.getId(), uriInfo) : "").
                 add(BookJsonKey.TITLE.getKey(), book.getTitle() != null ? book.getTitle() : "").
                 add(BookJsonKey.AUTHOR.getKey(), book.getAuthor() != null ? book.getAuthor() : "").
                 add(BookJsonKey.IBAN.getKey(), book.getIban() != null ? book.getIban() : "").
+                add("links", attachLinks(book, uriInfo)).
                 build();
         
     }
 
-    private static String buildHref(final String resource, final Long id, final UriInfo uriInfo) {
-        assert resource != null : "Argument resource must not be null!";
-        assert id != null : "Argument id must not be null!";
-        return String.format("%s%s/%s", uriInfo.getBaseUri(), resource, id);
+    private static JsonArray attachLinks(final Book book, final UriInfo uriInfo) {
+        assert book != null : "Argument book must not be null!";
+        assert uriInfo != null : "Argument uriInfo must not be null!";
+        URI selfUri = uriInfo.getBaseUriBuilder().path(Books.class).path(book.getId().toString()).build();
+        JsonObject selfLink = Json.createObjectBuilder().
+                add("rel", "self").
+                add("href", selfUri.toString()).
+                build();
+        
+        URI chaptersUri = UriBuilder.fromUri(selfUri).path("chapters").build();
+        JsonObject chaptersLink = Json.createObjectBuilder().
+                add("rel", "chapters").
+                add("href", chaptersUri.toString()).
+                build();
+        
+        return Json.createArrayBuilder().
+                add(selfLink).
+                add(chaptersLink).
+                build();
     }
-
+    
 }
+
+    
