@@ -11,7 +11,7 @@ import ch.gry.rest.exception.ResourceNotFoundException;
 import java.util.Collection;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.inject.Inject;
+import javax.ejb.Stateless;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -19,21 +19,28 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.GenericEntity;
 
 /**
  *
  * @author yvesgross
  */
-@Path("/")
+@Stateless
+@Path("")
 public class Chapters {
     
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private static final Logger logger = Logger.getLogger(Chapters.class.getName());
  
 //    @Inject // how to properly use @Inject?
     @EJB
     BookService service;
 
-    
+    /**
+     *
+     * @param bookId
+     * @param newChapter
+     * @return
+     */
     @POST
     public Chapter createChapter(
             @PathParam("chapterId") final Long bookId, // PathParams of the parent resources are also accessable from here!
@@ -48,10 +55,10 @@ public class Chapters {
     }
     
     @GET
-    public Collection<Chapter> getChapters(@PathParam("chapterId") final Long bookId) {
-        logger.info("REST-GET: getChapters()");
+    public GenericEntity<Collection<Chapter>> getChapters(@PathParam("bookId") final Long bookId) {
+        logger.info(String.format("REST-GET: getChapters() of book:%d", bookId));
         try {
-            return service.getChapters(bookId);
+            return new GenericEntity<Collection<Chapter>>(service.getChapters(bookId)){};
         } catch (ResourceNotFoundException ex) {
             throw new NotFoundException(ex);
         }

@@ -12,7 +12,6 @@ import ch.gry.myjavaee7project1.books.model.Chapter;
 import ch.gry.rest.exception.ResourceNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Singleton;
 
@@ -20,12 +19,10 @@ import javax.ejb.Singleton;
  *
  * @author yvesgross
  */
-//@Stateless
 @Singleton
-//@Default // this is the only default implementation of the BookService
 public class BookServiceImpl implements BookService{
 
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private static final Logger logger = Logger.getLogger(BookServiceImpl.class.getName());
 
     Map<Long, Book> books = new HashMap<>();
 
@@ -45,7 +42,7 @@ public class BookServiceImpl implements BookService{
             createChapter(book.getId(), new Chapter("Chapter C-2", "Text C-2"));
             
         } catch (ResourceNotFoundException ex) {
-            Logger.getLogger(BookServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            logger.severe(ex.getLocalizedMessage());
         }
     }
     
@@ -124,7 +121,8 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public Collection<Chapter> getChapters(final Long bookId) throws ResourceNotFoundException {
-        return getBook(bookId).getChapters().values();
+        Collection<Chapter> chapters = getBook(bookId).getChapters().values();
+        return chapters;
     }
 
     @Override

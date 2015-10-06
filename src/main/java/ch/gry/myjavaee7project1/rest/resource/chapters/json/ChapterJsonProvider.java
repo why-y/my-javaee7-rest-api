@@ -37,7 +37,7 @@ import javax.ws.rs.ext.Provider;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ChapterJsonProvider  implements MessageBodyReader<Chapter>, MessageBodyWriter<Chapter> {
     
-    private Logger logger = Logger.getLogger(ChapterJsonProvider.class.getName());
+    private static final Logger logger = Logger.getLogger(ChapterJsonProvider.class.getName());
     
     @Context
     UriInfo uriInfo;

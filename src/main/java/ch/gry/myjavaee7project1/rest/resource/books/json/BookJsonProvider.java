@@ -37,7 +37,7 @@ import javax.ws.rs.ext.Provider;
 @Consumes(MediaType.APPLICATION_JSON)
 public class BookJsonProvider implements MessageBodyReader<Book>, MessageBodyWriter<Book> {
 
-    private Logger logger = Logger.getLogger(BookJsonProvider.class.getName());
+    private static final Logger logger = Logger.getLogger(BookJsonProvider.class.getName());
     
     @Context
     UriInfo uriInfo;

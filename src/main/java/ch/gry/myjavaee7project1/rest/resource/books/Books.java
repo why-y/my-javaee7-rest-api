@@ -17,36 +17,57 @@ import ch.gry.myjavaee7project1.rest.resource.chapters.Chapters;
 import ch.gry.rest.exception.ResourceNotFoundException;
 import java.util.Collection;
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.GenericEntity;
 
 /**
  *
  * @author yvesgross
  */
+@Stateless
 @Path("books")
 public class Books {
 
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private static final Logger logger = Logger.getLogger(Books.class.getName());
 
 //    @Inject // how to properly use @Inject?
     @EJB
     BookService service;
+    
+    @Inject
+    Chapters chaptersSubResource;
 
+    /**
+     *
+     * @param book
+     * @return
+     */
     @POST
     public Book createBook(final Book book) {
         logger.info("REST-POST: createBook()");
         return service.createBook(book);
     }
 
+    /**
+     *
+     * @return
+     */
     @GET
-    public Collection<Book> getBooks() {
+    public GenericEntity<Collection<Book>> getBooks() {
         logger.info("REST-GET: getBooks()");
-        return service.getBooks();
+        return new GenericEntity<Collection<Book>>(service.getBooks()){};
     }
 
+    /**
+     *
+     * @param bookId
+     * @return
+     */
     @GET
     @Path("{bookId}")
     public Book getBook(@PathParam("bookId") final Long bookId) {
@@ -74,6 +95,10 @@ public class Books {
         }
     }
 
+    /**
+     *
+     * @param bookId
+     */
     @DELETE
     @Path("{bookId}")
     public void deleteBook(@PathParam("bookId") final Long bookId) {
@@ -85,6 +110,10 @@ public class Books {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @GET
     @Path("quantity")
     public JsonObject countBooks() {
@@ -97,9 +126,14 @@ public class Books {
     
     /////////// SUB-RESOURCES //////////////////////////////////////////////////
     
+    /**
+     *
+     * @return
+     */
+        
     @Path("{bookId}/chapters")
     public Chapters getChaptersResource() {
-        return new Chapters();
+        return chaptersSubResource;
     }
 
 }
