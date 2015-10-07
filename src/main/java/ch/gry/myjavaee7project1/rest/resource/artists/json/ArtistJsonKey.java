@@ -3,17 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.gry.myjavaee7project1.rest.resource.chapters.json;
+package ch.gry.myjavaee7project1.rest.resource.artists.json;
 
 /**
  *
  * @author yvesgross
  */
-public enum ChapterJsonKey {
-    ID("id"), TITLE("title"), TEXT("text"), HREF("href");
+public enum ArtistJsonKey {
+
+    ID("id"), NAME("name"), ORIGIN("origin");
     private final String key;
 
-    private ChapterJsonKey(String key) {
+    private ArtistJsonKey(String key) {
         this.key = key;
     }
 
@@ -21,20 +22,17 @@ public enum ChapterJsonKey {
         return this.key;
     }
 
-    public static ChapterJsonKey byString(String key) {
+    public static ArtistJsonKey byString(String key) {
         switch (key) {
             case "id" :
                 return ID;
-            case "title":
-                return TITLE;
-            case "text":
-                return TEXT;
-            case "href":
-                return HREF;
+            case "name":
+                return NAME;
+            case "origin":
+                return ORIGIN;
             default:
                 throw new IllegalArgumentException(String.format("The given key: \"%s\" has no associated ENUM!", key));
         }
     }
 
-    
 }

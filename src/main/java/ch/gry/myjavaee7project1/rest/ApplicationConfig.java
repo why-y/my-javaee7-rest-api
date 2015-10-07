@@ -30,12 +30,12 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(ch.gry.myjavaee7project1.rest.GreetingResource.class);
-        resources.add(ch.gry.myjavaee7project1.rest.resource.books.Books.class);
-        resources.add(ch.gry.myjavaee7project1.rest.resource.books.json.BookJsonProvider.class);
-        resources.add(ch.gry.myjavaee7project1.rest.resource.books.json.BooksCollectionProvider.class);
-        resources.add(ch.gry.myjavaee7project1.rest.resource.chapters.Chapters.class);
-        resources.add(ch.gry.myjavaee7project1.rest.resource.chapters.json.ChapterJsonProvider.class);
-        resources.add(ch.gry.myjavaee7project1.rest.resource.chapters.json.ChaptersCollectionJsonProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.albums.Albums.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.albums.json.AlbumCollectionProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.albums.json.AlbumJsonProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.artists.Artists.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.artists.json.ArtistJsonProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.artists.json.ArtistsCollectionProvider.class);
     }
     
 }

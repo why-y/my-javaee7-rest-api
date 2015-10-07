@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.gry.myjavaee7project1.rest.resource.books.json;
+package ch.gry.myjavaee7project1.rest.resource.albums.json;
 
-import ch.gry.myjavaee7project1.books.model.Book;
+import ch.gry.myjavaee7project1.musicshelf.model.Album;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
@@ -33,9 +33,9 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class BooksCollectionProvider implements MessageBodyWriter<Collection<Book>> {
+public class AlbumCollectionProvider implements MessageBodyWriter<Collection<Album>> {
 
-    private static final Logger logger = Logger.getLogger(BookJsonProvider.class.getName());
+    private static final Logger logger = Logger.getLogger(AlbumJsonProvider.class.getName());
 
     @Context
     UriInfo uriInfo;
@@ -44,12 +44,12 @@ public class BooksCollectionProvider implements MessageBodyWriter<Collection<Boo
     @Override
     public boolean isWriteable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
         
-        logger.info(String.format("     <<< BooksJsonProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1.getClass() + "-" + type1.getTypeName(), Arrays.toString(antns), mt));
-        // we expect a Collection of books, which is a Parameterized Type with one parameter type "Book"
+        logger.info(String.format("     <<< AlbumsJsonProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1.getClass() + "-" + type1.getTypeName(), Arrays.toString(antns), mt));
+        // we expect a Collection of albums, which is a Parameterized Type with one parameter type "Album"
         if(type1 instanceof ParameterizedTypeImpl) {
             ParameterizedTypeImpl parameterizedType = (ParameterizedTypeImpl) type1;
             Type[] paramTypes = parameterizedType.getActualTypeArguments();
-            if(paramTypes.length==1 && paramTypes[0]==Book.class) {
+            if(paramTypes.length==1 && paramTypes[0]==Album.class) {
                 return true;
             }
         }
@@ -57,18 +57,18 @@ public class BooksCollectionProvider implements MessageBodyWriter<Collection<Boo
     }
 
     @Override
-    public long getSize(Collection<Book> t, Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
-        logger.info(String.format("     <<< BooksJsonProvider::getSize(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
+    public long getSize(Collection<Album> t, Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
+        logger.info(String.format("     <<< AlbumsJsonProvider::getSize(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
         // deprecated by JAX-RS 2.0 and ignored by Jersey runtime
         return 0;
     }
 
     @Override
-    public void writeTo(Collection<Book> books, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
-        logger.info(String.format("     <<< BooksJsonProvider::writeTo(..) -----> books: %s, type:%s, type1:%s, antns:%s, mt:%s", books, type, type1, antns, mt));
+    public void writeTo(Collection<Album> albums, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
+        logger.info(String.format("     <<< AlbumsJsonProvider::writeTo(..) -----> albums: %s, type:%s, type1:%s, antns:%s, mt:%s", albums, type, type1, antns, mt));
         JsonArrayBuilder builder = Json.createArrayBuilder();
-        for (Book book : books) {
-            builder.add(BookJsonProvider.toJson(book, uriInfo));
+        for (Album album : albums) {
+            builder.add(AlbumJsonProvider.toJson(album, uriInfo));
         }
         out.write(builder.build().toString().getBytes("UTF-8"));
     }

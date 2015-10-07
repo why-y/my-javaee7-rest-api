@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.gry.myjavaee7project1.rest.resource.chapters.json;
+package ch.gry.myjavaee7project1.rest.resource.artists.json;
 
-import ch.gry.myjavaee7project1.books.model.Chapter;
+import ch.gry.myjavaee7project1.musicshelf.model.Artist;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
@@ -33,9 +33,9 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ChaptersCollectionJsonProvider  implements MessageBodyWriter<Collection<Chapter>>{
+public class ArtistsCollectionProvider implements MessageBodyWriter<Collection<Artist>> {
 
-    private static final Logger logger = Logger.getLogger(ChapterJsonProvider.class.getName());
+    private static final Logger logger = Logger.getLogger(ArtistJsonProvider.class.getName());
 
     @Context
     UriInfo uriInfo;
@@ -44,12 +44,12 @@ public class ChaptersCollectionJsonProvider  implements MessageBodyWriter<Collec
     @Override
     public boolean isWriteable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
         
-        logger.info(String.format("     <<< ChaptersJsonProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1.getClass() + "-" + type1.getTypeName(), Arrays.toString(antns), mt));
-        // we expect a Collection of chapters, which is a Parameterized Type with one parameter type "Chapter"
+        logger.info(String.format("     <<< ArtistsJsonProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1.getClass() + "-" + type1.getTypeName(), Arrays.toString(antns), mt));
+        // we expect a Collection of artists, which is a Parameterized Type with one parameter type "Artist"
         if(type1 instanceof ParameterizedTypeImpl) {
             ParameterizedTypeImpl parameterizedType = (ParameterizedTypeImpl) type1;
             Type[] paramTypes = parameterizedType.getActualTypeArguments();
-            if(paramTypes.length==1 && paramTypes[0]==Chapter.class) {
+            if(paramTypes.length==1 && paramTypes[0]==Artist.class) {
                 return true;
             }
         }
@@ -57,21 +57,20 @@ public class ChaptersCollectionJsonProvider  implements MessageBodyWriter<Collec
     }
 
     @Override
-    public long getSize(Collection<Chapter> t, Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
-        logger.info(String.format("     <<< ChaptersJsonProvider::getSize(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
+    public long getSize(Collection<Artist> t, Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
+        logger.info(String.format("     <<< ArtistsJsonProvider::getSize(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
         // deprecated by JAX-RS 2.0 and ignored by Jersey runtime
         return 0;
     }
 
     @Override
-    public void writeTo(Collection<Chapter> chapters, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
-        logger.info(String.format("     <<< ChaptersJsonProvider::writeTo(..) -----> chapters: %s, type:%s, type1:%s, antns:%s, mt:%s", chapters, type, type1, antns, mt));
+    public void writeTo(Collection<Artist> artists, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
+        logger.info(String.format("     <<< ArtistsJsonProvider::writeTo(..) -----> artists: %s, type:%s, type1:%s, antns:%s, mt:%s", artists, type, type1, antns, mt));
         JsonArrayBuilder builder = Json.createArrayBuilder();
-        for (Chapter chapter : chapters) {
-            builder.add(ChapterJsonProvider.toJson(chapter, uriInfo));
+        for (Artist artist : artists) {
+            builder.add(ArtistJsonProvider.toJson(artist, uriInfo));
         }
         out.write(builder.build().toString().getBytes("UTF-8"));
     }
         
-    
 }
