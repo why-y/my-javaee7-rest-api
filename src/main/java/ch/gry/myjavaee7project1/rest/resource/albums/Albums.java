@@ -2,11 +2,13 @@ package ch.gry.myjavaee7project1.rest.resource.albums;
 
 import ch.gry.myjavaee7project1.musicshelf.ejb.AlbumsService;
 import ch.gry.myjavaee7project1.musicshelf.model.Album;
+import ch.gry.myjavaee7project1.rest.resource.tracks.Tracks;
 import ch.gry.rest.exception.ResourceNotFoundException;
 import java.util.Collection;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.DELETE;
@@ -31,6 +33,9 @@ public class Albums {
 //    @Inject // how to properly use @Inject?
     @EJB
     AlbumsService service;
+    
+    @Inject
+    Tracks tracksSubResource;
     
     /**
      *
@@ -118,5 +123,9 @@ public class Albums {
                 build();
     }
 
-    
+    //////////// SUB RESOURCES /////////////////////////////////////////////////
+    @Path("{albumId}/tracks")
+    public Tracks getTracksSubResource() {
+        return tracksSubResource;
+    }
 }

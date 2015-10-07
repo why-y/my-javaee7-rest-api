@@ -9,6 +9,7 @@ import ch.gry.myjavaee7project1.musicshelf.boundary.CrudService;
 import ch.gry.myjavaee7project1.musicshelf.model.Model;
 import ch.gry.rest.exception.ResourceNotFoundException;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import java.util.Map;
  */
 public class AbstractCrudService<T extends Model> implements CrudService<T> {
     
-    private final int startId;
+    private final Long startId;
     
     private final Map<Long, T> store = new HashMap<>();
 
@@ -27,7 +28,7 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      *
      * @param startId
      */
-    public AbstractCrudService(int startId) {
+    public AbstractCrudService(Long startId) {
         this.startId = startId;
     }
     
@@ -38,7 +39,7 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      */
     @Override
     public T create(final T newModel) {
-        long newId = store.size() + startId;
+        long newId = nextId(this.store, this.startId);
         newModel.setId(newId);
         store.put(newId, newModel);
         return newModel;
@@ -106,4 +107,13 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
         return store.size();
     }    
 
+    protected Long nextId(Map<Long, ?> map, Long startId) {
+        Long result = startId;
+        if(!map.isEmpty()) {
+            Long highestId = map.keySet().stream().max(Comparator.naturalOrder()).get();
+            result = ++highestId;
+        }
+        System.out.println("---> next ID is: " + result);
+        return result;
+    }
 }

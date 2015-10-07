@@ -28,7 +28,7 @@ public interface CrudService<T extends Model> {
      * @return
      */
     public Collection<T> getAll();
-    
+
     /**
      *
      * @param id

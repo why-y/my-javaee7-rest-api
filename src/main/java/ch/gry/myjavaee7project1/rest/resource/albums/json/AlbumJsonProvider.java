@@ -8,6 +8,7 @@ package ch.gry.myjavaee7project1.rest.resource.albums.json;
 import ch.gry.myjavaee7project1.musicshelf.model.Album;
 import ch.gry.myjavaee7project1.rest.resource.albums.Albums;
 import ch.gry.myjavaee7project1.rest.resource.json.Link;
+import ch.gry.myjavaee7project1.rest.resource.tracks.Tracks;
 import java.io.IOException;
 
 import java.io.InputStream;
@@ -112,11 +113,16 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
                 add(AlbumJsonKey.TITLE.getKey(), album.getTitle() != null ? album.getTitle() : "").
                 add(AlbumJsonKey.ARTIST_ID.getKey(), album.getArtistId()!= null ? album.getArtistId().toString() : "").
                 add(AlbumJsonKey.APPEARANCE.getKey(), album.getAppearance() != null ? album.getAppearance().toString() : "").
-                add("links", Link.asJsonArray(Arrays.asList(
-                        new Link("self", uriInfo.getBaseUriBuilder().
+                add("links", Link.asJsonArray(Arrays.asList(new Link("self", uriInfo.getBaseUriBuilder().
                                 path(Albums.class).
                                 path(album.getId().toString()).
-                                build().toString())))).
+                                build().toString()),
+                        new Link("tracks", uriInfo.getBaseUriBuilder().
+                                 path(Albums.class).
+                                path(Albums.class, "getTracksSubResource").
+                                path(Tracks.class).
+                                resolveTemplate("albumId", album.getId()).
+                               build().toString())))).
                 build();
         
     }

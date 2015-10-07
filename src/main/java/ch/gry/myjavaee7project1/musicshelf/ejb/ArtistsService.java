@@ -16,7 +16,7 @@ import javax.ejb.Singleton;
 @Singleton
 public class ArtistsService extends AbstractCrudService<Artist>{
 
-    private static final int START_ID = 100;
+    private static final long START_ID = 100;
 
     public ArtistsService() {
         super(START_ID);

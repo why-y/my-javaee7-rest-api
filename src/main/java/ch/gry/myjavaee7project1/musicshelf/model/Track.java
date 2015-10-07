@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author yvesgross
  */
-public class Title extends Model {
+public class Track extends Model {
     
     private String Title;
     
@@ -21,10 +21,10 @@ public class Title extends Model {
     private Integer trackNo;
 
 
-    public Title() {
+    public Track() {
     }
 
-    public Title(String Title, Duration duration, Integer trackNo) {
+    public Track(String Title, Duration duration, Integer trackNo) {
         this.Title = Title;
         this.duration = duration;
         this.trackNo = trackNo;
@@ -102,7 +102,7 @@ public class Title extends Model {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Title other = (Title) obj;
+        final Track other = (Track) obj;
         if (!Objects.equals(this.Title, other.Title)) {
             return false;
         }

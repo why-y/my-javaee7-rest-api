@@ -6,6 +6,9 @@
 package ch.gry.myjavaee7project1.musicshelf.model;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  *
@@ -18,6 +21,8 @@ public class Album extends Model{
     private Long artistId;
 
     private LocalDate appearance;
+
+    private Map<Long, Track> tracks = new HashMap<>();
 
     public Album() {
     }
@@ -82,4 +87,47 @@ public class Album extends Model{
         this.Title = Title;
     }
 
+    /**
+     *
+     * @return
+     */
+    public Map<Long, Track> getTracks() {
+        return tracks;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.Title);
+        hash = 53 * hash + Objects.hashCode(this.artistId);
+        hash = 53 * hash + Objects.hashCode(this.appearance);
+        hash = 53 * hash + Objects.hashCode(this.tracks);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Album other = (Album) obj;
+        if (!Objects.equals(this.Title, other.Title)) {
+            return false;
+        }
+        if (!Objects.equals(this.artistId, other.artistId)) {
+            return false;
+        }
+        if (!Objects.equals(this.appearance, other.appearance)) {
+            return false;
+        }
+        if (!Objects.equals(this.tracks, other.tracks)) {
+            return false;
+        }
+        return true;
+    }
+
+    
 }

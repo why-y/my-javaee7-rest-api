@@ -36,6 +36,9 @@ public class ApplicationConfig extends Application {
         resources.add(ch.gry.myjavaee7project1.rest.resource.artists.Artists.class);
         resources.add(ch.gry.myjavaee7project1.rest.resource.artists.json.ArtistJsonProvider.class);
         resources.add(ch.gry.myjavaee7project1.rest.resource.artists.json.ArtistsCollectionProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.tracks.Tracks.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.tracks.json.TrackCollectionProvider.class);
+        resources.add(ch.gry.myjavaee7project1.rest.resource.tracks.json.TrackJsonProvider.class);
     }
     
 }
