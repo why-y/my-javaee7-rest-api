@@ -7,15 +7,19 @@ package ch.gry.myjavaee7project1.rest.resource.books.json;
 
 import ch.gry.myjavaee7project1.books.model.Book;
 import ch.gry.myjavaee7project1.rest.resource.books.Books;
+import ch.gry.myjavaee7project1.rest.resource.json.Link;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonString;
@@ -112,32 +116,15 @@ public class BookJsonProvider implements MessageBodyReader<Book>, MessageBodyWri
                 add(BookJsonKey.TITLE.getKey(), book.getTitle() != null ? book.getTitle() : "").
                 add(BookJsonKey.AUTHOR.getKey(), book.getAuthor() != null ? book.getAuthor() : "").
                 add(BookJsonKey.IBAN.getKey(), book.getIban() != null ? book.getIban() : "").
-                add("links", attachLinks(book, uriInfo)).
+                add("links", Link.asJsonArray(Arrays.asList(
+                        new Link("self", uriInfo.getBaseUriBuilder().
+                                path(Books.class).
+                                path(book.getId().toString()).
+                                build().toString())))).
                 build();
         
     }
 
-    private static JsonArray attachLinks(final Book book, final UriInfo uriInfo) {
-        assert book != null : "Argument book must not be null!";
-        assert uriInfo != null : "Argument uriInfo must not be null!";
-        URI selfUri = uriInfo.getBaseUriBuilder().path(Books.class).path(book.getId().toString()).build();
-        JsonObject selfLink = Json.createObjectBuilder().
-                add("rel", "self").
-                add("href", selfUri.toString()).
-                build();
-        
-        URI chaptersUri = UriBuilder.fromUri(selfUri).path("chapters").build();
-        JsonObject chaptersLink = Json.createObjectBuilder().
-                add("rel", "chapters").
-                add("href", chaptersUri.toString()).
-                build();
-        
-        return Json.createArrayBuilder().
-                add(selfLink).
-                add(chaptersLink).
-                build();
-    }
-    
 }
 
     

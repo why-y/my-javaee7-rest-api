@@ -8,16 +8,15 @@ package ch.gry.myjavaee7project1.rest.resource.chapters.json;
 import ch.gry.myjavaee7project1.books.model.Chapter;
 import ch.gry.myjavaee7project1.rest.resource.books.Books;
 import ch.gry.myjavaee7project1.rest.resource.chapters.Chapters;
+import ch.gry.myjavaee7project1.rest.resource.json.Link;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.net.URI;
-import java.util.List;
+import java.util.Arrays;
 import java.util.logging.Logger;
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonString;
@@ -105,34 +104,22 @@ public class ChapterJsonProvider  implements MessageBodyReader<Chapter>, Message
         JsonObject jsonObject = toJson(chapter, uriInfo);
         out.write(jsonObject.toString().getBytes("UTF-8"));
     }
-    
+
     protected static JsonObject toJson(final Chapter chapter, final UriInfo uriInfo) {
+        String bookId = uriInfo.getPathParameters().get("bookId").get(0);
         return Json.createObjectBuilder().
                 add(ChapterJsonKey.ID.getKey(), chapter.getId() != null ? chapter.getId().toString() : "").
                 add(ChapterJsonKey.TITLE.getKey(), chapter.getTitle() != null ? chapter.getTitle() : "").
                 add(ChapterJsonKey.TEXT.getKey(), chapter.getText()!= null ? chapter.getText(): "").
-                add("links", attachLinks(chapter, uriInfo)).
+                add("links", Link.asJsonArray(Arrays.asList(
+                        new Link("self", uriInfo.getBaseUriBuilder().
+                                path(Books.class).
+                                path(Books.class, "getChaptersResource").
+                                path(Chapters.class).
+                                path(chapter.getId().toString()).
+                                resolveTemplate("bookId", bookId).
+                                build().toString())))).
                 build();
-        
     }
-
-    private static JsonArray attachLinks(final Chapter chapter, final UriInfo uriInfo) {
-        assert chapter != null : "Argument chapter must not be null!";
-        assert uriInfo != null : "Argument uriInfo must not be null!";
-        String bookId = uriInfo.getPathParameters().get("bookId").get(0);
-        URI selfUri = uriInfo.getBaseUriBuilder().
-                path(Books.class).
-                path(Books.class, "getChaptersResource").
-                path(Chapters.class).
-                path(chapter.getId().toString()).
-                resolveTemplate("bookId", bookId).
-                build();
-        JsonObject jsonLink = Json.createObjectBuilder().
-                add("rel", "self").
-                add("href", selfUri.toString()).
-                build();
         
-        return Json.createArrayBuilder().add(jsonLink).build();
-    }
-    
 }
