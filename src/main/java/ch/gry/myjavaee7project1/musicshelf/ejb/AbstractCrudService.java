@@ -22,7 +22,7 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
     
     private final Long startId;
     
-    private final Map<Long, T> store = new HashMap<>();
+    protected final Map<Long, T> store = new HashMap<>();
 
     /**
      *

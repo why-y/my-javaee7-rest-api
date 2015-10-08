@@ -12,6 +12,10 @@ import ch.gry.rest.exception.ResourceNotFoundException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
@@ -59,6 +63,12 @@ public class AlbumsService extends AbstractCrudService<Album> {
         } catch (ResourceNotFoundException ex) {
             throw new RuntimeException(ex);
         }
+    }
+    
+    public Collection<Album> getAlbumsOf(final Long artistId) throws ResourceNotFoundException{
+        Artist artist = artistsService.get(artistId);
+        Collection<Album> result = new ArrayList<>();
+        return this.store.values().stream().filter(album -> album.getArtist().getId().equals(artistId)).collect(Collectors.toList());
     }
     
     public Track addTrack(final Long albumId, final Track newTrack) throws ResourceNotFoundException{
