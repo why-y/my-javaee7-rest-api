@@ -16,6 +16,9 @@ public class Artist extends Model{
     private String name;
     private String origin;
 
+    public Artist() {
+    }
+    
     public Artist(String Name, String origin) {
         this.name = Name;
         this.origin = origin;

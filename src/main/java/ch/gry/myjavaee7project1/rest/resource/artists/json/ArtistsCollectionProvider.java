@@ -66,11 +66,9 @@ public class ArtistsCollectionProvider implements MessageBodyWriter<Collection<A
     @Override
     public void writeTo(Collection<Artist> artists, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< ArtistsJsonProvider::writeTo(..) -----> artists: %s, type:%s, type1:%s, antns:%s, mt:%s", artists, type, type1, antns, mt));
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        for (Artist artist : artists) {
-            builder.add(ArtistJsonProvider.toJson(artist, uriInfo));
-        }
-        out.write(builder.build().toString().getBytes("UTF-8"));
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        artists.stream().forEach(artist -> jsonArrayBuilder.add(ArtistJsonProvider.toJson(artist, uriInfo)));
+        Json.createWriter(out).writeArray(jsonArrayBuilder.build());
     }
         
 }

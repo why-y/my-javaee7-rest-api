@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -95,11 +96,10 @@ public class ArtistJsonProvider implements MessageBodyReader<Artist>, MessageBod
     @Override
     public void writeTo(Artist artist, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< ArtistJsonProvider::writeTo(..) -----> artist: %s, type:%s, type1:%s, antns:%s, mt:%s", artist, type, type1, antns, mt));
-        JsonObject jsonObject = toJson(artist, uriInfo);
-        out.write(jsonObject.toString().getBytes("UTF-8"));
+        Json.createWriter(out).writeObject(toJson(artist, uriInfo).build());
     }
     
-    protected static JsonObject toJson(final Artist artist, final UriInfo uriInfo) {
+    public static JsonObjectBuilder toJson(final Artist artist, final UriInfo uriInfo) {
         return Json.createObjectBuilder().
                 add(ArtistJsonKey.ID.getKey(), artist.getId() != null ? artist.getId().toString() : "").
                 add(ArtistJsonKey.NAME.getKey(), artist.getName()!= null ? artist.getName() : "").
@@ -107,8 +107,7 @@ public class ArtistJsonProvider implements MessageBodyReader<Artist>, MessageBod
                 add("links", Link.asJsonArray(Arrays.asList(new Link("self", uriInfo.getBaseUriBuilder().
                                 path(Artists.class).
                                 path(artist.getId().toString()).
-                                build().toString())))).
-                build();
+                                build().toString()))));
         
     }
 

@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -101,11 +102,10 @@ public class TrackJsonProvider implements MessageBodyReader<Track>, MessageBodyW
     @Override
     public void writeTo(Track title, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< TitleJsonProvider::writeTo(..) -----> title: %s, type:%s, type1:%s, antns:%s, mt:%s", title, type, type1, antns, mt));
-        JsonObject jsonObject = toJson(title, uriInfo);
-        out.write(jsonObject.toString().getBytes("UTF-8"));
+        Json.createWriter(out).write(toJson(title, uriInfo).build());
     }
     
-    protected static JsonObject toJson(final Track title, final UriInfo uriInfo) {
+    protected static JsonObjectBuilder toJson(final Track title, final UriInfo uriInfo) {
         String albumId = uriInfo.getPathParameters().get("albumId").get(0);
         return Json.createObjectBuilder().
                 add(TrackJsonKey.ID.getKey(), title.getId() != null ? title.getId().toString() : "").
@@ -118,8 +118,7 @@ public class TrackJsonProvider implements MessageBodyReader<Track>, MessageBodyW
                                 path(Tracks.class).
                                 path(title.getId().toString()).
                                 resolveTemplate("albumId", albumId).
-                                build().toString())))).
-                build();
+                                build().toString()))));
         
     }
 

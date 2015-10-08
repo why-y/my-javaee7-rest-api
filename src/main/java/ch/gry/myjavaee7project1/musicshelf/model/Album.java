@@ -18,7 +18,7 @@ public class Album extends Model{
     
     private String Title;
 
-    private Long artistId;
+    private Artist artist;
 
     private LocalDate appearance;
 
@@ -27,9 +27,9 @@ public class Album extends Model{
     public Album() {
     }
 
-    public Album(String Title, Long artistId, LocalDate appearance) {
+    public Album(String Title, Artist artist, LocalDate appearance) {
         this.Title = Title;
-        this.artistId = artistId;
+        this.artist = artist;
         this.appearance = appearance;
     }
     
@@ -52,21 +52,21 @@ public class Album extends Model{
     }
 
     /**
-     * Get the Id of the artist
+     * Get the artist
      *
-     * @return the Id of the artist
+     * @return the artist
      */
-    public Long getArtistId() {
-        return artistId;
+    public Artist getArtist() {
+        return artist;
     }
 
     /**
-     * Set the Id of the artist
+     * Set the artist
      *
-     * @param artistId new Id of the artist
+     * @param artist
      */
-    public void setArtistId(Long artistId) {
-        this.artistId = artistId;
+    public void setArtist(Artist artist) {
+        this.artist = artist;
     }
 
     /**
@@ -97,11 +97,11 @@ public class Album extends Model{
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 53 * hash + Objects.hashCode(this.Title);
-        hash = 53 * hash + Objects.hashCode(this.artistId);
-        hash = 53 * hash + Objects.hashCode(this.appearance);
-        hash = 53 * hash + Objects.hashCode(this.tracks);
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.Title);
+        hash = 67 * hash + Objects.hashCode(this.artist);
+        hash = 67 * hash + Objects.hashCode(this.appearance);
+        hash = 67 * hash + Objects.hashCode(this.tracks);
         return hash;
     }
 
@@ -117,7 +117,7 @@ public class Album extends Model{
         if (!Objects.equals(this.Title, other.Title)) {
             return false;
         }
-        if (!Objects.equals(this.artistId, other.artistId)) {
+        if (!Objects.equals(this.artist, other.artist)) {
             return false;
         }
         if (!Objects.equals(this.appearance, other.appearance)) {
@@ -128,6 +128,5 @@ public class Album extends Model{
         }
         return true;
     }
-
     
 }

@@ -14,7 +14,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Logger;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonValue;
+import javax.json.JsonWriter;
+import javax.json.stream.JsonGenerator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -66,11 +70,11 @@ public class AlbumCollectionProvider implements MessageBodyWriter<Collection<Alb
     @Override
     public void writeTo(Collection<Album> albums, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< AlbumsJsonProvider::writeTo(..) -----> albums: %s, type:%s, type1:%s, antns:%s, mt:%s", albums, type, type1, antns, mt));
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        for (Album album : albums) {
-            builder.add(AlbumJsonProvider.toJson(album, uriInfo));
-        }
-        out.write(builder.build().toString().getBytes("UTF-8"));
+
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        albums.stream().forEach(album -> jsonArrayBuilder.add(AlbumJsonProvider.toJson(album, uriInfo)));
+        
+        Json.createWriter(out).writeArray(jsonArrayBuilder.build());
     }
         
 }

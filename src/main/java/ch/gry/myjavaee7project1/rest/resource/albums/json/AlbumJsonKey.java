@@ -11,7 +11,7 @@ package ch.gry.myjavaee7project1.rest.resource.albums.json;
  */
 public enum AlbumJsonKey {
 
-    ID("id"), TITLE("title"), ARTIST_ID("artistId"), APPEARANCE("appearance");
+    ID("id"), TITLE("title"), ARTIST("artist"), APPEARANCE("appearance");
     private final String key;
 
     private AlbumJsonKey(String key) {
@@ -28,8 +28,8 @@ public enum AlbumJsonKey {
                 return ID;
             case "title":
                 return TITLE;
-            case "artistId":
-                return ARTIST_ID;
+            case "artist":
+                return ARTIST;
             case "appearance":
                 return APPEARANCE;
             default:

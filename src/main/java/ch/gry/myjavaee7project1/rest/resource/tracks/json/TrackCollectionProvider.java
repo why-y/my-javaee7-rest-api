@@ -66,11 +66,9 @@ public class TrackCollectionProvider implements MessageBodyWriter<Collection<Tra
     @Override
     public void writeTo(Collection<Track> titles, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< TitlesJsonProvider::writeTo(..) -----> titles: %s, type:%s, type1:%s, antns:%s, mt:%s", titles, type, type1, antns, mt));
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        for (Track title : titles) {
-            builder.add(TrackJsonProvider.toJson(title, uriInfo));
-        }
-        out.write(builder.build().toString().getBytes("UTF-8"));
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        titles.stream().forEach(title -> jsonArrayBuilder.add(TrackJsonProvider.toJson(title, uriInfo)));
+        Json.createWriter(out).write(jsonArrayBuilder.build());
     }
         
 }

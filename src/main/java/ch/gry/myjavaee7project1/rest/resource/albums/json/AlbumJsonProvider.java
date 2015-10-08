@@ -6,7 +6,9 @@
 package ch.gry.myjavaee7project1.rest.resource.albums.json;
 
 import ch.gry.myjavaee7project1.musicshelf.model.Album;
+import ch.gry.myjavaee7project1.musicshelf.model.Artist;
 import ch.gry.myjavaee7project1.rest.resource.albums.Albums;
+import ch.gry.myjavaee7project1.rest.resource.artists.json.ArtistJsonProvider;
 import ch.gry.myjavaee7project1.rest.resource.json.Link;
 import ch.gry.myjavaee7project1.rest.resource.tracks.Tracks;
 import java.io.IOException;
@@ -22,7 +24,11 @@ import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
+import javax.json.JsonValue;
+import javax.json.JsonWriter;
+import javax.json.stream.JsonGenerator;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -70,10 +76,12 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
             throw new BadRequestException("Could not parse title!");
         }
         
-        JsonNumber artistId = jsonObj.getJsonNumber(AlbumJsonKey.ARTIST_ID.getKey());
+        JsonNumber artistId = jsonObj.getJsonNumber(AlbumJsonKey.ARTIST.getKey());
         if(artistId==null) {
             throw new BadRequestException("Could not parse artistId!");
         }
+        Artist artist = new Artist();
+        artist.setId(artistId.longValue());
         
         JsonString appearance = jsonObj.getJsonString(AlbumJsonKey.APPEARANCE.getKey());
         if(appearance==null) {
@@ -81,7 +89,7 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
         }
         
         
-        Album album = new Album(title.getString(), artistId.longValue(), LocalDate.parse(appearance.getChars(), DateTimeFormatter.ISO_DATE));
+        Album album = new Album(title.getString(), artist, LocalDate.parse(appearance.getChars(), DateTimeFormatter.ISO_DATE));
         album.setId(id.longValue());
         
         return album;        
@@ -103,15 +111,14 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
     @Override
     public void writeTo(Album album, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< AlbumJsonProvider::writeTo(..) -----> album: %s, type:%s, type1:%s, antns:%s, mt:%s", album, type, type1, antns, mt));
-        JsonObject jsonObject = toJson(album, uriInfo);
-        out.write(jsonObject.toString().getBytes("UTF-8"));
+        Json.createWriter(out).writeObject(toJson(album, uriInfo).build());
     }
     
-    protected static JsonObject toJson(final Album album, final UriInfo uriInfo) {
+    protected static JsonObjectBuilder toJson(final Album album, final UriInfo uriInfo) {
         return Json.createObjectBuilder().
                 add(AlbumJsonKey.ID.getKey(), album.getId() != null ? album.getId().toString() : "").
                 add(AlbumJsonKey.TITLE.getKey(), album.getTitle() != null ? album.getTitle() : "").
-                add(AlbumJsonKey.ARTIST_ID.getKey(), album.getArtistId()!= null ? album.getArtistId().toString() : "").
+                add(AlbumJsonKey.ARTIST.getKey(), album.getArtist()!= null ? ArtistJsonProvider.toJson(album.getArtist(), uriInfo) : null).
                 add(AlbumJsonKey.APPEARANCE.getKey(), album.getAppearance() != null ? album.getAppearance().toString() : "").
                 add("links", Link.asJsonArray(Arrays.asList(new Link("self", uriInfo.getBaseUriBuilder().
                                 path(Albums.class).
@@ -122,8 +129,7 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
                                 path(Albums.class, "getTracksSubResource").
                                 path(Tracks.class).
                                 resolveTemplate("albumId", album.getId()).
-                               build().toString())))).
-                build();
+                               build().toString()))));
         
     }
 
