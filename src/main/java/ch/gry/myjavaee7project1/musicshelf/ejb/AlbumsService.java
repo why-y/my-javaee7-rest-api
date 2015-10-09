@@ -5,20 +5,20 @@
  */
 package ch.gry.myjavaee7project1.musicshelf.ejb;
 
-import ch.gry.myjavaee7project1.musicshelf.model.Album;
-import ch.gry.myjavaee7project1.musicshelf.model.Artist;
-import ch.gry.myjavaee7project1.musicshelf.model.Track;
-import ch.gry.rest.exception.ResourceNotFoundException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
+
+import ch.gry.myjavaee7project1.musicshelf.model.Album;
+import ch.gry.myjavaee7project1.musicshelf.model.Track;
+import ch.gry.rest.exception.ResourceNotFoundException;
 
 /**
  *
@@ -26,6 +26,8 @@ import javax.inject.Inject;
  */
 @Singleton
 public class AlbumsService extends AbstractCrudService<Album> {
+
+    private static final Logger logger = Logger.getLogger(AlbumsService.class.getName());
 
     private static final long START_ID = 200;
     
@@ -41,7 +43,9 @@ public class AlbumsService extends AbstractCrudService<Album> {
      */
     @PostConstruct
     public void initData() {
-        try {
+    	
+    	try {
+    		
             Album album = create(new Album("Album A", 
                     artistsService.get(100l),
                     LocalDate.of(2008, Month.MARCH, 12)));
@@ -65,9 +69,7 @@ public class AlbumsService extends AbstractCrudService<Album> {
         }
     }
     
-    public Collection<Album> getAlbumsOf(final Long artistId) throws ResourceNotFoundException{
-        Artist artist = artistsService.get(artistId);
-        Collection<Album> result = new ArrayList<>();
+	public Collection<Album> getAlbumsOf(final Long artistId) throws ResourceNotFoundException{
         return this.store.values().stream().filter(album -> album.getArtist().getId().equals(artistId)).collect(Collectors.toList());
     }
     

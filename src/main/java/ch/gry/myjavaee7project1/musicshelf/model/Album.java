@@ -16,7 +16,12 @@ import java.util.Objects;
  */
 public class Album extends Model{
     
-    private String Title;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String Title;
 
     private Artist artist;
 
@@ -128,5 +133,12 @@ public class Album extends Model{
         }
         return true;
     }
+
+	@Override
+	public String toString() {
+		return "Album [Title=" + Title + ", artist=" + artist + ", appearance=" + appearance + ", tracks=" + tracks
+				+ "]";
+	}
+    
     
 }

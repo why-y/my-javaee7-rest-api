@@ -5,14 +5,7 @@
  */
 package ch.gry.myjavaee7project1.rest.resource.albums.json;
 
-import ch.gry.myjavaee7project1.musicshelf.model.Album;
-import ch.gry.myjavaee7project1.musicshelf.model.Artist;
-import ch.gry.myjavaee7project1.rest.resource.albums.Albums;
-import ch.gry.myjavaee7project1.rest.resource.artists.json.ArtistJsonProvider;
-import ch.gry.myjavaee7project1.rest.resource.json.Link;
-import ch.gry.myjavaee7project1.rest.resource.tracks.Tracks;
 import java.io.IOException;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
@@ -21,14 +14,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.logging.Logger;
+
 import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
-import javax.json.JsonValue;
-import javax.json.JsonWriter;
-import javax.json.stream.JsonGenerator;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -40,6 +31,13 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
+
+import ch.gry.myjavaee7project1.musicshelf.model.Album;
+import ch.gry.myjavaee7project1.musicshelf.model.Artist;
+import ch.gry.myjavaee7project1.rest.resource.albums.Albums;
+import ch.gry.myjavaee7project1.rest.resource.artists.json.ArtistJsonProvider;
+import ch.gry.myjavaee7project1.rest.resource.json.Link;
+import ch.gry.myjavaee7project1.rest.resource.tracks.Tracks;
 
 /**
  *

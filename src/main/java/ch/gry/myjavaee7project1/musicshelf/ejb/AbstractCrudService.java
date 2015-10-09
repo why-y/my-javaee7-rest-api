@@ -113,7 +113,6 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
             Long highestId = map.keySet().stream().max(Comparator.naturalOrder()).get();
             result = ++highestId;
         }
-        System.out.println("---> next ID is: " + result);
         return result;
     }
 }
