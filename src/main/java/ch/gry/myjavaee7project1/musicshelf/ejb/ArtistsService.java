@@ -5,15 +5,16 @@
  */
 package ch.gry.myjavaee7project1.musicshelf.ejb;
 
-import ch.gry.myjavaee7project1.musicshelf.model.Artist;
 import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
+import javax.ejb.Stateless;
+
+import ch.gry.myjavaee7project1.musicshelf.model.Artist;
 
 /**
  *
  * @author yvesgross
  */
-@Singleton
+@Stateless
 public class ArtistsService extends AbstractCrudService<Artist>{
 
     private static final long START_ID = 100;

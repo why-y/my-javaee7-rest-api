@@ -1,15 +1,12 @@
 package ch.gry.myjavaee7project1.rest.resource.tracks;
 
-import ch.gry.myjavaee7project1.musicshelf.ejb.AlbumsService;
-import ch.gry.myjavaee7project1.musicshelf.model.Album;
-import ch.gry.myjavaee7project1.musicshelf.model.Track;
-import ch.gry.rest.exception.ResourceNotFoundException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.DELETE;
@@ -21,6 +18,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.GenericEntity;
 
+import ch.gry.myjavaee7project1.musicshelf.ejb.AlbumsService;
+import ch.gry.myjavaee7project1.musicshelf.model.Album;
+import ch.gry.myjavaee7project1.musicshelf.model.Track;
+import ch.gry.rest.exception.ResourceNotFoundException;
+
 /**
  *
  * @author yvesgross
@@ -31,8 +33,8 @@ public class Tracks {
     
     private static final Logger logger = Logger.getLogger(Tracks.class.getName());
 
-//    @Inject // how to properly use @Inject?
-    @EJB
+//    @EJB
+    @Inject // how to properly use @Inject?
     AlbumsService albumService;
     
     /**

@@ -5,7 +5,6 @@
  */
 package ch.gry.myjavaee7project1.rest.resource.artists.json;
 
-import ch.gry.myjavaee7project1.musicshelf.model.Artist;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
@@ -13,6 +12,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Logger;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.ws.rs.Consumes;
@@ -24,6 +24,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
+
+import ch.gry.myjavaee7project1.musicshelf.model.Artist;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 /**
@@ -35,7 +37,7 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ArtistsCollectionProvider implements MessageBodyWriter<Collection<Artist>> {
 
-    private static final Logger logger = Logger.getLogger(ArtistJsonProvider.class.getName());
+    private static final Logger logger = Logger.getLogger(ArtistsCollectionProvider.class.getName());
 
     @Context
     UriInfo uriInfo;
@@ -44,7 +46,7 @@ public class ArtistsCollectionProvider implements MessageBodyWriter<Collection<A
     @Override
     public boolean isWriteable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
         
-        logger.info(String.format("     <<< ArtistsJsonProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1.getClass() + "-" + type1.getTypeName(), Arrays.toString(antns), mt));
+        logger.info(String.format("     <<< ArtistsCollectionProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1.getClass() + "-" + type1.getTypeName(), Arrays.toString(antns), mt));
         // we expect a Collection of artists, which is a Parameterized Type with one parameter type "Artist"
         if(type1 instanceof ParameterizedTypeImpl) {
             ParameterizedTypeImpl parameterizedType = (ParameterizedTypeImpl) type1;
@@ -58,14 +60,14 @@ public class ArtistsCollectionProvider implements MessageBodyWriter<Collection<A
 
     @Override
     public long getSize(Collection<Artist> t, Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
-        logger.info(String.format("     <<< ArtistsJsonProvider::getSize(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
+        logger.info(String.format("     <<< ArtistsCollectionProvider::getSize(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
         // deprecated by JAX-RS 2.0 and ignored by Jersey runtime
         return 0;
     }
 
     @Override
     public void writeTo(Collection<Artist> artists, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
-        logger.info(String.format("     <<< ArtistsJsonProvider::writeTo(..) -----> artists: %s, type:%s, type1:%s, antns:%s, mt:%s", artists, type, type1, antns, mt));
+        logger.info(String.format("     <<< ArtistsCollectionProvider::writeTo(..) -----> artists: %s, type:%s, type1:%s, antns:%s, mt:%s", artists, type, type1, antns, mt));
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
         artists.stream().forEach(artist -> jsonArrayBuilder.add(ArtistJsonProvider.toJson(artist, uriInfo)));
         Json.createWriter(out).writeArray(jsonArrayBuilder.build());
