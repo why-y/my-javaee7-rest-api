@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import ch.gry.myjavaee7project1.musicshelf.model.Album;
@@ -24,7 +24,7 @@ import ch.gry.rest.exception.ResourceNotFoundException;
  *
  * @author yvesgross
  */
-@Stateless
+@RequestScoped
 public class AlbumsService extends AbstractCrudService<Album> {
 
     private static final Logger logger = Logger.getLogger(AlbumsService.class.getName());

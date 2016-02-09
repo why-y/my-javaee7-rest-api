@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  *
  * @author yvesgross

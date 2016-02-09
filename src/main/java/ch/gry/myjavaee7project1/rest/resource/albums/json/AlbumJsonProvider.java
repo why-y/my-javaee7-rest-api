@@ -5,6 +5,7 @@
  */
 package ch.gry.myjavaee7project1.rest.resource.albums.json;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,7 +19,6 @@ import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -109,10 +109,11 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
     @Override
     public void writeTo(Album album, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< AlbumJsonProvider::writeTo(..) -----> album: %s, type:%s, type1:%s, antns:%s, mt:%s", album, type, type1, antns, mt));
-        Json.createWriter(out).writeObject(toJson(album, uriInfo).build());
+        DataOutputStream dos = new DataOutputStream(out);
+        dos.writeBytes(toJson(album, uriInfo).toString());  
     }
     
-    protected static JsonObjectBuilder toJson(final Album album, final UriInfo uriInfo) {
+    protected static JsonObject toJson(final Album album, final UriInfo uriInfo) {
         return Json.createObjectBuilder().
                 add(AlbumJsonKey.ID.getKey(), album.getId() != null ? album.getId().toString() : "").
                 add(AlbumJsonKey.TITLE.getKey(), album.getTitle() != null ? album.getTitle() : "").
@@ -127,8 +128,7 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
                                 path(Albums.class, "getTracksSubResource").
                                 path(Tracks.class).
                                 resolveTemplate("albumId", album.getId()).
-                               build().toString()))));
-        
+                               build().toString())))).build();
     }
 
 }

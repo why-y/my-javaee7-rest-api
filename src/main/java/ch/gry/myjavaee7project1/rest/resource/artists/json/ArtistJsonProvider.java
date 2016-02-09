@@ -5,21 +5,18 @@
  */
 package ch.gry.myjavaee7project1.rest.resource.artists.json;
 
-import ch.gry.myjavaee7project1.musicshelf.model.Artist;
-import ch.gry.myjavaee7project1.rest.resource.artists.Artists;
-import ch.gry.myjavaee7project1.rest.resource.json.Link;
+import java.io.DataOutputStream;
 import java.io.IOException;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.logging.Logger;
+
 import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -32,6 +29,10 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
+
+import ch.gry.myjavaee7project1.musicshelf.model.Artist;
+import ch.gry.myjavaee7project1.rest.resource.artists.Artists;
+import ch.gry.myjavaee7project1.rest.resource.json.Link;
 
 /**
  *
@@ -96,10 +97,11 @@ public class ArtistJsonProvider implements MessageBodyReader<Artist>, MessageBod
     @Override
     public void writeTo(Artist artist, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< ArtistJsonProvider::writeTo(..) -----> artist: %s, type:%s, type1:%s, antns:%s, mt:%s", artist, type, type1, antns, mt));
-        Json.createWriter(out).writeObject(toJson(artist, uriInfo).build());
+        DataOutputStream dos = new DataOutputStream(out);
+        dos.writeBytes(toJson(artist, uriInfo).toString());        
     }
     
-    public static JsonObjectBuilder toJson(final Artist artist, final UriInfo uriInfo) {
+    public static JsonObject toJson(final Artist artist, final UriInfo uriInfo) {
         return Json.createObjectBuilder().
                 add(ArtistJsonKey.ID.getKey(), artist.getId() != null ? artist.getId().toString() : "").
                 add(ArtistJsonKey.NAME.getKey(), artist.getName()!= null ? artist.getName() : "").
@@ -107,7 +109,7 @@ public class ArtistJsonProvider implements MessageBodyReader<Artist>, MessageBod
                 add("links", Link.asJsonArray(Arrays.asList(new Link("self", uriInfo.getBaseUriBuilder().
                                 path(Artists.class).
                                 path(artist.getId().toString()).
-                                build().toString()))));
+                                build().toString())))).build();
         
     }
 

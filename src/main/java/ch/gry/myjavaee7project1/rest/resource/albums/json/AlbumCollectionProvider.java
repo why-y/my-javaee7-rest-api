@@ -5,7 +5,6 @@
  */
 package ch.gry.myjavaee7project1.rest.resource.albums.json;
 
-import ch.gry.myjavaee7project1.musicshelf.model.Album;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
@@ -13,12 +12,9 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Logger;
+
 import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonValue;
-import javax.json.JsonWriter;
-import javax.json.stream.JsonGenerator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -28,12 +24,15 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
+
+import ch.gry.myjavaee7project1.musicshelf.model.Album;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 /**
  *
  * @author yvesgross
  */
+@SuppressWarnings("restriction")
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
