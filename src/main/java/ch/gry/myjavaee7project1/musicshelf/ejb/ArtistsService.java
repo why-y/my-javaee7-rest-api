@@ -6,7 +6,7 @@
 package ch.gry.myjavaee7project1.musicshelf.ejb;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
 
 import ch.gry.myjavaee7project1.musicshelf.model.Artist;
 
@@ -14,7 +14,7 @@ import ch.gry.myjavaee7project1.musicshelf.model.Artist;
  *
  * @author yvesgross
  */
-@Stateless
+@RequestScoped
 public class ArtistsService extends AbstractCrudService<Artist>{
 
     private static final long START_ID = 100;

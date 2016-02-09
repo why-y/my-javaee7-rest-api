@@ -23,6 +23,7 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
+import javax.json.JsonWriter;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -51,13 +52,13 @@ public class TrackJsonProvider implements MessageBodyReader<Track>, MessageBodyW
     
     @Override
     public boolean isReadable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
-        logger.info(String.format("     >>> TitleJsonProvider::isReadable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
+        logger.info(String.format("     >>> TrackJsonProvider::isReadable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
         return Track.class.isAssignableFrom(type);
     }
 
     @Override
     public Track readFrom(Class<Track> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, String> mm, InputStream in) throws IOException, WebApplicationException {
-        logger.info(String.format("     >>> TitleJsonProvider::readFrom(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
+        logger.info(String.format("     >>> TrackJsonProvider::readFrom(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
         JsonObject jsonObj = Json.createReader(in).readObject();
         
         JsonNumber id = jsonObj.getJsonNumber(TrackJsonKey.ID.getKey());
@@ -88,21 +89,23 @@ public class TrackJsonProvider implements MessageBodyReader<Track>, MessageBodyW
 
     @Override
     public boolean isWriteable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
-        logger.info(String.format("     <<< TitleJsonProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
+        logger.info(String.format("     <<< TrackJsonProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
         return Track.class.isAssignableFrom(type);
     }
 
     @Override
     public long getSize(Track t, Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
-        logger.info(String.format("     <<< TitleJsonProvider::getSize(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
+        logger.info(String.format("     <<< TrackJsonProvider::getSize(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1, antns, mt));
         // deprecated by JAX-RS 2.0 and ignored by Jersey runtime
         return 0;
     }
 
     @Override
     public void writeTo(Track title, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
-        logger.info(String.format("     <<< TitleJsonProvider::writeTo(..) -----> title: %s, type:%s, type1:%s, antns:%s, mt:%s", title, type, type1, antns, mt));
-        Json.createWriter(out).write(toJson(title, uriInfo).build());
+        logger.info(String.format("     <<< TrackJsonProvider::writeTo(..) -----> title: %s, type:%s, type1:%s, antns:%s, mt:%s", title, type, type1, antns, mt));
+        JsonWriter jsonWriter = Json.createWriter(out);
+        jsonWriter.write(toJson(title, uriInfo).build());
+        jsonWriter.close();
     }
     
     protected static JsonObjectBuilder toJson(final Track title, final UriInfo uriInfo) {

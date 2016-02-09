@@ -5,7 +5,6 @@
  */
 package ch.gry.myjavaee7project1.rest.resource.artists.json;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +17,7 @@ import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonString;
+import javax.json.JsonWriter;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -97,8 +97,9 @@ public class ArtistJsonProvider implements MessageBodyReader<Artist>, MessageBod
     @Override
     public void writeTo(Artist artist, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< ArtistJsonProvider::writeTo(..) -----> artist: %s, type:%s, type1:%s, antns:%s, mt:%s", artist, type, type1, antns, mt));
-        DataOutputStream dos = new DataOutputStream(out);
-        dos.writeBytes(toJson(artist, uriInfo).toString());        
+        JsonWriter jsonWriter = Json.createWriter(out);
+        jsonWriter.writeObject(toJson(artist, uriInfo));
+        jsonWriter.close();
     }
     
     public static JsonObject toJson(final Artist artist, final UriInfo uriInfo) {

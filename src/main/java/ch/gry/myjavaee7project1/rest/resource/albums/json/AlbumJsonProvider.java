@@ -5,7 +5,6 @@
  */
 package ch.gry.myjavaee7project1.rest.resource.albums.json;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,6 +19,7 @@ import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonString;
+import javax.json.JsonWriter;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -109,8 +109,9 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
     @Override
     public void writeTo(Album album, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out) throws IOException, WebApplicationException {
         logger.info(String.format("     <<< AlbumJsonProvider::writeTo(..) -----> album: %s, type:%s, type1:%s, antns:%s, mt:%s", album, type, type1, antns, mt));
-        DataOutputStream dos = new DataOutputStream(out);
-        dos.writeBytes(toJson(album, uriInfo).toString());  
+        JsonWriter jsonWriter = Json.createWriter(out);
+        jsonWriter.writeObject(toJson(album, uriInfo));
+        jsonWriter.close();
     }
     
     protected static JsonObject toJson(final Album album, final UriInfo uriInfo) {

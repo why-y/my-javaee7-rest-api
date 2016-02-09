@@ -8,6 +8,7 @@ package ch.gry.myjavaee7project1.rest.resource.artists.json;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,6 +16,7 @@ import java.util.logging.Logger;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonWriter;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -26,7 +28,6 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import ch.gry.myjavaee7project1.musicshelf.model.Artist;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 /**
  *
@@ -44,18 +45,21 @@ public class ArtistsCollectionProvider implements MessageBodyWriter<Collection<A
     
 
     @Override
-    public boolean isWriteable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         
-        logger.info(String.format("     <<< ArtistsCollectionProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, type1.getClass() + "-" + type1.getTypeName(), Arrays.toString(antns), mt));
-        // we expect a Collection of artists, which is a Parameterized Type with one parameter type "Artist"
-        if(type1 instanceof ParameterizedTypeImpl) {
-            ParameterizedTypeImpl parameterizedType = (ParameterizedTypeImpl) type1;
-            Type[] paramTypes = parameterizedType.getActualTypeArguments();
-            if(paramTypes.length==1 && paramTypes[0]==Artist.class) {
-                return true;
-            }
+        logger.info(String.format("     <<< ArtistsCollectionProvider::isWritable(..) -----> type:%s type1:%s antns:%s mt:%s", type, genericType.getClass() + "-" + genericType.getTypeName(), Arrays.toString(annotations), mediaType));
+        
+        if (!Collection.class.isAssignableFrom(type) || !MediaType.APPLICATION_JSON_TYPE.isCompatible(mediaType)) {
+            return false;
         }
-        return false;
+
+        if (!(genericType instanceof ParameterizedType)) {
+            return false;
+        }
+
+        final ParameterizedType parameterizedType = (ParameterizedType) genericType;
+        final Type actualType = parameterizedType.getActualTypeArguments()[0];
+        return actualType == Artist.class;
     }
 
     @Override
@@ -70,7 +74,9 @@ public class ArtistsCollectionProvider implements MessageBodyWriter<Collection<A
         logger.info(String.format("     <<< ArtistsCollectionProvider::writeTo(..) -----> artists: %s, type:%s, type1:%s, antns:%s, mt:%s", artists, type, type1, antns, mt));
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
         artists.stream().forEach(artist -> jsonArrayBuilder.add(ArtistJsonProvider.toJson(artist, uriInfo)));
-        Json.createWriter(out).writeArray(jsonArrayBuilder.build());
+        JsonWriter jsonWriter = Json.createWriter(out);
+        jsonWriter.writeArray(jsonArrayBuilder.build());
+        jsonWriter.close();
     }
         
 }
