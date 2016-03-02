@@ -11,7 +11,9 @@ package ch.gry.rest.exception;
  */
 public class ResourceNotFoundException extends Exception {
 
-    public ResourceNotFoundException() {
+	private static final long serialVersionUID = 1L;
+
+	public ResourceNotFoundException() {
     }
 
     public ResourceNotFoundException(String message) {

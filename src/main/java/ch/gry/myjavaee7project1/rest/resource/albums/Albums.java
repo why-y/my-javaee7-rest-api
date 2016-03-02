@@ -60,7 +60,7 @@ public class Albums {
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<Album> getAlbums() {
         logger.info("REST-GET: getAlbums()");
-        return service.getAll();
+        return service.getAll(Album.class);
     }
 
     /**

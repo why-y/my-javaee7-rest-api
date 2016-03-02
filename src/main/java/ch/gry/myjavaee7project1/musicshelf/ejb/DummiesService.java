@@ -7,16 +7,13 @@ package ch.gry.myjavaee7project1.musicshelf.ejb;
 
 import javax.enterprise.context.RequestScoped;
 
-import ch.gry.myjavaee7project1.musicshelf.model.Artist;
+import ch.gry.myjavaee7project1.musicshelf.model.Dummy;
 
 /**
  *
  * @author yvesgross
  */
 @RequestScoped
-public class ArtistsService extends AbstractCrudService<Artist>{
-
-    public ArtistsService() {
-    }
-    
+public class DummiesService extends AbstractCrudService<Dummy>{
+	
 }

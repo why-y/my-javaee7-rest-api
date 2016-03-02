@@ -5,13 +5,15 @@
  */
 package ch.gry.myjavaee7project1.musicshelf.ejb;
 
+import java.util.Collection;
+import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import ch.gry.myjavaee7project1.musicshelf.boundary.CrudService;
 import ch.gry.myjavaee7project1.musicshelf.model.Model;
 import ch.gry.rest.exception.ResourceNotFoundException;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -19,17 +21,17 @@ import java.util.Map;
  * @param <T>
  */
 public class AbstractCrudService<T extends Model> implements CrudService<T> {
-    
-    private final Long startId;
-    
-    protected final Map<Long, T> store = new HashMap<>();
 
+	private static final Logger logger = Logger.getLogger(AbstractCrudService.class.getName());
+	
+    @PersistenceContext
+    EntityManager em;
+    
     /**
      *
      * @param startId
      */
-    public AbstractCrudService(Long startId) {
-        this.startId = startId;
+    public AbstractCrudService() {
     }
     
     /**
@@ -39,9 +41,10 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      */
     @Override
     public T create(final T newModel) {
-        long newId = nextId(this.store, this.startId);
-        newModel.setId(newId);
-        store.put(newId, newModel);
+    	logger.info("About to persist the new Model : " + newModel);
+    	em.persist(newModel);
+    	em.flush();
+    	logger.info("Just persisted the new Model : " + newModel);
         return newModel;
     }
 
@@ -50,8 +53,9 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      * @return
      */
     @Override
-    public Collection<T> getAll() {
-        return store.values();
+    public Collection<T> getAll(Class<T> entityClass) {
+    	return em.createQuery("FROM " + entityClass.getName(), entityClass)
+    			.getResultList();
     }
 
     /**
@@ -62,10 +66,8 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      */
     @Override
     public T get(Long id) throws ResourceNotFoundException {
-        if(!store.containsKey(id)) {
-            throw new ResourceNotFoundException(String.format("Unknown model id %s!", id));
-        }
-        return store.get(id);        
+    	// TODO:
+    	return null;
     }
 
     /**
@@ -75,12 +77,7 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      */
     @Override
     public void update(final T model) throws ResourceNotFoundException {
-        if(!store.containsKey(model.getId())) {
-            throw new ResourceNotFoundException(String.format("Unknown model with id %s! Cannot be updated!", model.getId()));
-        }
-        else {
-            store.put(model.getId(), model);
-        }
+    	// TODO:
     }
 
     /**
@@ -90,12 +87,7 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      */
     @Override
     public void delete(Long id) throws ResourceNotFoundException {
-        if(!store.containsKey(id)){
-            throw new ResourceNotFoundException(String.format("Unknown model id %s! Cannot be deleted!", id));
-        }
-        else {
-            store.remove(id);
-        }
+    	// TODO:
     }
 
     /**
@@ -104,15 +96,8 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      */
     @Override
     public int count() {
-        return store.size();
+    	// TODO:
+    	return -1;
     }    
-
-    protected Long nextId(Map<Long, ?> map, Long startId) {
-        Long result = startId;
-        if(!map.isEmpty()) {
-            Long highestId = map.keySet().stream().max(Comparator.naturalOrder()).get();
-            result = ++highestId;
-        }
-        return result;
-    }
+    
 }

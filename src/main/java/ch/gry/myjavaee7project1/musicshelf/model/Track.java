@@ -8,16 +8,25 @@ package ch.gry.myjavaee7project1.musicshelf.model;
 import java.time.Duration;
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 /**
  *
  * @author yvesgross
  */
+@Entity
 public class Track extends Model {
     
-    private String Title;
+	private static final long serialVersionUID = 1L;
+
+	@Column
+	private String Title;
     
+	@Column
     private Duration duration;
 
+	@Column
     private Integer trackNo;
 
 

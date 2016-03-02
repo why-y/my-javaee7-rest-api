@@ -27,7 +27,7 @@ public interface CrudService<T extends Model> {
      *
      * @return
      */
-    public Collection<T> getAll();
+    public Collection<T> getAll(Class<T> clazz);
 
     /**
      *

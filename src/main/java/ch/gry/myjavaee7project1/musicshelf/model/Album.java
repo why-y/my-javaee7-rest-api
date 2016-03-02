@@ -6,28 +6,34 @@
 package ch.gry.myjavaee7project1.musicshelf.model;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 /**
  *
  * @author yvesgross
  */
+@Entity
 public class Album extends Model{
     
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
+	@Column	
 	private String Title;
 
+	@Column
     private Artist artist;
 
+	@Column
     private LocalDate appearance;
 
-    private Map<Long, Track> tracks = new HashMap<>();
+	@OneToMany
+    private List<Track> tracks = new ArrayList<>();
 
     public Album() {
     }
@@ -96,7 +102,7 @@ public class Album extends Model{
      *
      * @return
      */
-    public Map<Long, Track> getTracks() {
+    public List<Track> getTracks() {
         return tracks;
     }
 

@@ -13,6 +13,7 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <resteasy.version>3.0.14.Final</resteasy.version>
+        <hibernate.version>3.5.4-Final</hibernate.version>
     </properties>
     
     <dependencies>
@@ -53,12 +54,36 @@
         	<version>${resteasy.version}</version>
         	<scope>provided</scope>
         </dependency>
-        <!-- dependency>
-        	<groupId>org.jboss.resteasy</groupId>
-        	<artifactId>resteasy-jackson-provider</artifactId>
-        	<version>${resteasy.version}</version>
+       
+        <!-- hibernate dependencies -->
+        
+        <!-- Import the JPA API, we use provided scope as the API is included in 
+            JBoss WildFly -->
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
             <scope>provided</scope>
-        </dependency -->
+        </dependency>
+        
+        <!-- Annotation processor to generate the JPA 2.0 metamodel classes for 
+            typesafe criteria queries -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>5.1.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Annotation processor that raising compilation errors whenever constraint 
+            annotations are incorrectly used. -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator-annotation-processor</artifactId>
+            <version>5.1.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
+        
     </dependencies>
 
     <build>

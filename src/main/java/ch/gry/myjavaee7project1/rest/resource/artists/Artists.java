@@ -62,7 +62,7 @@ public class Artists {
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<Artist> getArtists() {
         logger.info("REST-GET: getArtists()");
-        return artistsService.getAll();
+        return artistsService.getAll(Artist.class);
     }
 
     /**

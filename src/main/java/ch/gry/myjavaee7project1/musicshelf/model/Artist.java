@@ -7,14 +7,23 @@ package ch.gry.myjavaee7project1.musicshelf.model;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 /**
  *
  * @author yvesgross
  */
+@Entity
 public class Artist extends Model{
     
-    private String name;
-    private String origin;
+	private static final long serialVersionUID = 1L;
+	
+	@Column
+	private String name;
+    
+	@Column
+	private String origin;
 
     public Artist() {
     }

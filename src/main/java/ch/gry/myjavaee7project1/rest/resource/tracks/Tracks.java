@@ -1,7 +1,6 @@
 package ch.gry.myjavaee7project1.rest.resource.tracks;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,10 +49,8 @@ public class Tracks {
     public Track createTrack(@PathParam("albumId") final Long albumId, final Track newTrack) {
         logger.info("REST-POST: createTrack()");
         try {
-            Map<Long, Track> tracks = albumService.get(albumId).getTracks();
-            long newId = tracks.size()+1;
-            newTrack.setId(newId);
-            tracks.put(newId, newTrack);
+            List<Track> tracks = albumService.get(albumId).getTracks();
+            tracks.add(newTrack);
             return newTrack;
         } catch (ResourceNotFoundException ex) {
             Logger.getLogger(Tracks.class.getName()).log(Level.SEVERE, null, ex);
@@ -63,10 +60,10 @@ public class Tracks {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Collection<Track> getTracks(@PathParam("albumId") final Long albumId) {
+    public List<Track> getTracks(@PathParam("albumId") final Long albumId) {
         logger.info("REST-GET: getTracks()");
         try {
-            return albumService.get(albumId).getTracks().values();
+            return albumService.get(albumId).getTracks();
         } catch (ResourceNotFoundException ex) {
             throw new NotFoundException(ex);
         }
@@ -86,11 +83,8 @@ public class Tracks {
             @PathParam("trackId") final Long trackId) {
         
         logger.info(String.format("REST-GET: getTrack(%d)", trackId));
-        try {
-            return albumService.get(albumId).getTracks().get(trackId);
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
-        }
+    	// TODO:
+        return null;
     }
 
     /**
@@ -107,16 +101,7 @@ public class Tracks {
             @PathParam("trackId") final Long trackId, 
             final Track track) {
         logger.info(String.format("REST-PUT: updateTrack(%d)", trackId));
-        try {
-            Album album = albumService.get(albumId);
-            Track existingTrack = album.getTracks().get(trackId);
-            if(existingTrack==null){
-                throw new NotFoundException(String.format("No track found in album: %d with trackId: %d", albumId, trackId));
-            }
-            album.getTracks().put(trackId, track);
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
-        }
+    	// TODO:
     }
 
     /**
@@ -130,16 +115,7 @@ public class Tracks {
             @PathParam("albumId") final Long albumId,
             @PathParam("trackId") final Long trackId) {
         logger.info(String.format("REST-DELETE: deleteTrack(%s)", trackId));
-        try {
-            Album album = albumService.get(albumId);
-            Track existingTrack = album.getTracks().get(trackId);
-            if(existingTrack==null){
-                throw new NotFoundException(String.format("No track found in album: %d with trackId: %d", albumId, trackId));
-            }
-            album.getTracks().remove(trackId);
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
-        }
+    	// TODO:
     }
 
     /**
