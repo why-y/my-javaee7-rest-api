@@ -62,7 +62,7 @@ public class Artists {
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<Artist> getArtists() {
         logger.info("REST-GET: getArtists()");
-        return artistsService.getAll(Artist.class);
+        return artistsService.getAll();
     }
 
     /**
@@ -129,7 +129,7 @@ public class Artists {
     public void deleteArtist(@PathParam("artistId") final Long artistId) {
         logger.info(String.format("REST-DELETE: deleteArtist(%s)", artistId));
         try {
-            artistsService.delete(artistId);
+            artistsService.delete(artistId, Artist.class);
         } catch (ResourceNotFoundException ex) {
             throw new NotFoundException(ex);
         }
@@ -145,7 +145,7 @@ public class Artists {
     public JsonObject countArtists() {
         logger.info("REST-GET: countArtists()");
         return Json.createObjectBuilder().
-                add("numOfArtists", artistsService.count()).
+                add("numOfArtists", artistsService.count(Artist.class)).
                 build();
     }
 

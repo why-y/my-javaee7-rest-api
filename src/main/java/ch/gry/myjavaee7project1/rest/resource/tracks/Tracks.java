@@ -49,7 +49,7 @@ public class Tracks {
     public Track createTrack(@PathParam("albumId") final Long albumId, final Track newTrack) {
         logger.info("REST-POST: createTrack()");
         try {
-            List<Track> tracks = albumService.get(albumId).getTracks();
+            List<Track> tracks = albumService.get(albumId, Album.class).getTracks();
             tracks.add(newTrack);
             return newTrack;
         } catch (ResourceNotFoundException ex) {
@@ -63,7 +63,7 @@ public class Tracks {
     public List<Track> getTracks(@PathParam("albumId") final Long albumId) {
         logger.info("REST-GET: getTracks()");
         try {
-            return albumService.get(albumId).getTracks();
+            return albumService.get(albumId, Album.class).getTracks();
         } catch (ResourceNotFoundException ex) {
             throw new NotFoundException(ex);
         }
@@ -129,7 +129,7 @@ public class Tracks {
     public JsonObject countTracks(@PathParam("albumId") final Long albumId) {
         logger.info("REST-GET: countTracks()");
         try {
-            Album album = albumService.get(albumId);
+            Album album = albumService.get(albumId, Album.class);
             return Json.createObjectBuilder().
                     add("numOfTracks", album.getTracks().size()).
                     build();

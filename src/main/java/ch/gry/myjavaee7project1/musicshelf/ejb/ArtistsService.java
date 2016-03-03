@@ -5,9 +5,12 @@
  */
 package ch.gry.myjavaee7project1.musicshelf.ejb;
 
+import java.util.Collection;
+
 import javax.enterprise.context.RequestScoped;
 
 import ch.gry.myjavaee7project1.musicshelf.model.Artist;
+import ch.gry.rest.exception.ResourceNotFoundException;
 
 /**
  *
@@ -16,7 +19,22 @@ import ch.gry.myjavaee7project1.musicshelf.model.Artist;
 @RequestScoped
 public class ArtistsService extends AbstractCrudService<Artist>{
 
-    public ArtistsService() {
+	/**
+	 * Get all artists
+	 * @return all artists
+	 */
+    public Collection<Artist> getAll() {
+    	return super.getAll(Artist.class);
+    }
+    
+    /**
+     * Gets a single Artist by its ID
+     * @param id The ID of the requested Artist
+     * @return The Artist with the given ID
+     * @throws ResourceNotFoundException if no Artist with the given ID has been found
+     */
+    public Artist get(final Long id) throws ResourceNotFoundException {
+    	return super.get(id, Artist.class);
     }
     
 }

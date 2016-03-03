@@ -42,9 +42,10 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
     @Override
     public T create(final T newModel) {
     	logger.info("About to persist the new Model : " + newModel);
+    	newModel.setId(null);
     	em.persist(newModel);
     	em.flush();
-    	logger.info("Just persisted the new Model : " + newModel);
+    	logger.info("Just persisted the new Model. Assigned ID: " + newModel.getId());
         return newModel;
     }
 
@@ -53,7 +54,7 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      * @return
      */
     @Override
-    public Collection<T> getAll(Class<T> entityClass) {
+    public Collection<T> getAll(final Class<T> entityClass) {
     	return em.createQuery("FROM " + entityClass.getName(), entityClass)
     			.getResultList();
     }
@@ -65,9 +66,12 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      * @throws ResourceNotFoundException
      */
     @Override
-    public T get(Long id) throws ResourceNotFoundException {
-    	// TODO:
-    	return null;
+    public T get(final Long id , final Class<T> entityClass) throws ResourceNotFoundException {
+    	try{
+    		return em.find(entityClass, id);    		
+    	} catch(IllegalArgumentException e) {
+    		throw new ResourceNotFoundException(e);
+    	}
     }
 
     /**
@@ -77,7 +81,11 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      */
     @Override
     public void update(final T model) throws ResourceNotFoundException {
-    	// TODO:
+    	try {
+    		em.merge(model);    		
+    	} catch(IllegalArgumentException e) {
+    		throw new ResourceNotFoundException(e);
+    	}
     }
 
     /**
@@ -86,8 +94,12 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      * @throws ResourceNotFoundException
      */
     @Override
-    public void delete(Long id) throws ResourceNotFoundException {
-    	// TODO:
+    public void delete(final Long id, final Class<T> entityClass) throws ResourceNotFoundException {
+    	try {
+    		em.remove(em.find(entityClass, id));    		
+    	} catch (IllegalArgumentException e) {
+    		throw new ResourceNotFoundException(e);
+    	}
     }
 
     /**
@@ -95,9 +107,8 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
      * @return
      */
     @Override
-    public int count() {
-    	// TODO:
-    	return -1;
+    public int count(final Class<T> entityClass) {
+    	return getAll(entityClass).size();
     }    
     
 }

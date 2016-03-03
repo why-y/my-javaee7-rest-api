@@ -74,7 +74,7 @@ public class Albums {
     public Album getAlbum(@PathParam("albumId") final Long albumId) {
         logger.info(String.format("REST-GET: getAlbum(%d)", albumId));
         try {
-            return service.get(albumId);
+            return service.get(albumId, Album.class);
         } catch (ResourceNotFoundException ex) {
             throw new NotFoundException(ex);
         }
@@ -111,7 +111,7 @@ public class Albums {
     public void deleteAlbum(@PathParam("albumId") final Long albumId) {
         logger.info(String.format("REST-DELETE: deleteAlbum(%s)", albumId));
         try {
-            service.delete(albumId);
+            service.delete(albumId, Album.class);
         } catch (ResourceNotFoundException ex) {
             throw new NotFoundException(ex);
         }
@@ -127,7 +127,7 @@ public class Albums {
     public JsonObject countAlbums() {
         logger.info("REST-GET: countAlbums()");
         return Json.createObjectBuilder().
-                add("numOfAlbums", service.count()).
+                add("numOfAlbums", service.count(Album.class)).
                 build();
     }
 

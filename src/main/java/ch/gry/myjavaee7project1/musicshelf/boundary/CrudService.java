@@ -24,18 +24,19 @@ public interface CrudService<T extends Model> {
     public T create(final T model);
     
     /**
-     *
+     * @param entityClass
      * @return
      */
-    public Collection<T> getAll(Class<T> clazz);
+    public Collection<T> getAll(final Class<T> entityClass);
 
     /**
      *
      * @param id
+     * @param entityClass
      * @return
      * @throws ResourceNotFoundException
      */
-    public T get(final Long id) throws ResourceNotFoundException;
+    public T get(final Long id, final Class<T> entityClass) throws ResourceNotFoundException;
     
     /**
      *
@@ -47,14 +48,15 @@ public interface CrudService<T extends Model> {
     /**
      *
      * @param id
+     * @param entityClass
      * @throws ResourceNotFoundException
      */
-    public void delete(final Long id) throws ResourceNotFoundException;
+    public void delete(final Long id, final Class<T> entityClass) throws ResourceNotFoundException;
     
     /**
      *
      * @return
      */
-    public int count();
+    public int count(final Class<T> entityClass);
     
 }
