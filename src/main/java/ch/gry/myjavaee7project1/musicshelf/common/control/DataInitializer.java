@@ -38,7 +38,7 @@ public class DataInitializer {
 	}
 	
 	@PostConstruct
-	public void initializeDb() {
+	public void initializeDb() throws EntityNotPersistedException {
 		albumsService.create(new Album("Album A-I", "Artist A", LocalDate.of(2000, 4, 23)));
 		albumsService.create(new Album("Album A-II", "Artist A", LocalDate.of(2001, 5, 13)));
 		albumsService.create(new Album("Album B-I", "Artist B", LocalDate.of(2000, 4, 23)));
@@ -58,7 +58,7 @@ public class DataInitializer {
 		
 		
 		dummiesService.create(new Dummy("Dummy A", 1000L));
-		dummiesService.create(new Dummy("Dummy B", 1002L));
+		dummiesService.create(new Dummy("Dummy B", 1002L));			
 	}
 
 }

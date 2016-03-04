@@ -2,7 +2,6 @@ package ch.gry.myjavaee7project1.musicshelf.track.boundary;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
@@ -22,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 
 import ch.gry.myjavaee7project1.musicshelf.album.control.AlbumsService;
 import ch.gry.myjavaee7project1.musicshelf.album.entity.Album;
-import ch.gry.myjavaee7project1.musicshelf.common.boundary.ResourceNotFoundException;
+import ch.gry.myjavaee7project1.musicshelf.common.control.EntityNotFoundException;
 import ch.gry.myjavaee7project1.musicshelf.track.entity.Track;
 
 /**
@@ -50,22 +49,17 @@ public class Tracks {
     public Track createTrack(@PathParam("albumId") final Long albumId, final Track newTrack) {
         logger.info("REST-POST: createTrack()");
         try {
-        	return albumService.addTrack(albumId, newTrack);
-        } catch (ResourceNotFoundException ex) {
-            Logger.getLogger(Tracks.class.getName()).log(Level.SEVERE, null, ex);
-            throw new NotFoundException(ex);
-        }
+			return albumService.addTrack(albumId, newTrack);
+		} catch (EntityNotFoundException e) {
+			throw new NotFoundException(String.format("Could not create and add new Track: %s to the album: %d !", newTrack, albumId), e);
+		}
     }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Track> getTracks(@PathParam("albumId") final Long albumId) {
         logger.info("REST-GET: getTracks()");
-        try {
-            return albumService.get(albumId, Album.class).getTracks();
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
-        }
+        return albumService.get(albumId, Album.class).getTracks();
     }
 
     /**
@@ -73,14 +67,13 @@ public class Tracks {
      * @param albumId
      * @param trackId
      * @return
-     * @throws ResourceNotFoundException 
      */
     @GET
     @Path("{trackId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Track getTrack(
             @PathParam("albumId") final Long albumId, 
-            @PathParam("trackId") final Long trackId) throws ResourceNotFoundException {
+            @PathParam("trackId") final Long trackId) {
         
         logger.info(String.format("REST-GET: getTrack(%d)", trackId));
 
@@ -135,14 +128,11 @@ public class Tracks {
     @Produces(MediaType.APPLICATION_JSON)
     public JsonObject countTracks(@PathParam("albumId") final Long albumId) {
         logger.info("REST-GET: countTracks()");
-        try {
-            Album album = albumService.get(albumId, Album.class);
-            return Json.createObjectBuilder().
-                    add("numOfTracks", album.getTracks().size()).
-                    build();
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
-        }
+        Album album = albumService.get(albumId, Album.class);
+        int numOfTracks = album!=null ? album.getTracks().size() : 0;
+        return Json.createObjectBuilder().
+                add("numOfTracks", numOfTracks).
+                build();
     }
 
 }

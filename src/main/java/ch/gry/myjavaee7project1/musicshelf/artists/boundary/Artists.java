@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -22,7 +23,8 @@ import ch.gry.myjavaee7project1.musicshelf.album.control.AlbumsService;
 import ch.gry.myjavaee7project1.musicshelf.album.entity.Album;
 import ch.gry.myjavaee7project1.musicshelf.artists.control.ArtistsService;
 import ch.gry.myjavaee7project1.musicshelf.artists.entity.Artist;
-import ch.gry.myjavaee7project1.musicshelf.common.boundary.ResourceNotFoundException;
+import ch.gry.myjavaee7project1.musicshelf.common.control.EntityNotFoundException;
+import ch.gry.myjavaee7project1.musicshelf.common.control.EntityNotPersistedException;
 
 /**
  *
@@ -50,7 +52,11 @@ public class Artists {
     @Consumes(MediaType.APPLICATION_JSON)
     public Artist createArtist(final Artist newArtist) {
         logger.info("REST-POST: createArtist()");
-        return artistsService.create(newArtist);      
+        try {
+			return artistsService.create(newArtist);
+		} catch (EntityNotPersistedException e) {
+			throw new BadRequestException(String.format("Could not create the artist: %s", newArtist), e);
+		}      
     }
     
     /**
@@ -74,11 +80,7 @@ public class Artists {
     @Produces(MediaType.APPLICATION_JSON)
     public Artist getArtist(@PathParam("artistId") final Long artistId) {
         logger.info(String.format("REST-GET: getArtist(%d)", artistId));
-        try {
-            return artistsService.get(artistId);
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
-        }
+        return artistsService.get(artistId);
     }
     
     /**
@@ -88,13 +90,9 @@ public class Artists {
     @GET
     @Path("{artistId}/albums")
     @Produces(MediaType.APPLICATION_JSON)
-    public Collection<Album> getDiscography(@PathParam("artistId") final Long artistId) {
-        try {
-            logger.info("REST-GET: getDiscography()");
-            return albumsService.getAlbumsOf(artistId);
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
-        }
+    public Collection<Album> getAlbums(@PathParam("artistId") final Long artistId) {
+    	logger.info("REST-GET: getAlbums()");
+    	return albumsService.getAlbumsOf(artistId);
     }
 
     /**
@@ -107,16 +105,15 @@ public class Artists {
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateArtist(@PathParam("artistId") final Long artistId, final Artist artist) {
         logger.info(String.format("REST-PUT: updateArtist(%d)", artistId));
+        // Make sure to update the object with the id of the resource.
+        // I.e. the id of the given update data is irrelevant.
+        artist.setId(artistId);
+        
         try {
-
-            // Make sure to update the object with the id of the resource.
-            // I.e. the id of the given update data is irrelevant.
-            artist.setId(artistId);
-
-            artistsService.update(artist);
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
-        }
+			artistsService.update(artist);
+		} catch (EntityNotFoundException e) {
+			throw new NotFoundException(String.format("Could not find the artist %s to update!", artist), e);
+		}
     }
 
     /**
@@ -128,10 +125,10 @@ public class Artists {
     public void deleteArtist(@PathParam("artistId") final Long artistId) {
         logger.info(String.format("REST-DELETE: deleteArtist(%s)", artistId));
         try {
-            artistsService.delete(artistId);
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
-        }
+			artistsService.delete(artistId);
+		} catch (EntityNotFoundException e) {
+			throw new NotFoundException(String.format("Could not find the artist with the ID: %d to delete!", artistId), e);
+		}
     }
 
     /**

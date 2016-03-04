@@ -10,8 +10,8 @@ import java.util.Collection;
 import javax.enterprise.context.RequestScoped;
 
 import ch.gry.myjavaee7project1.musicshelf.album.entity.Album;
-import ch.gry.myjavaee7project1.musicshelf.common.boundary.ResourceNotFoundException;
 import ch.gry.myjavaee7project1.musicshelf.common.control.AbstractCrudService;
+import ch.gry.myjavaee7project1.musicshelf.common.control.EntityNotFoundException;
 import ch.gry.myjavaee7project1.musicshelf.track.entity.Track;
 
 /**
@@ -35,17 +35,16 @@ public class AlbumsService extends AbstractCrudService<Album> {
      * Gets a single Album by its ID
      * @param id The ID of the requested Album
      * @return The Album with the given ID
-     * @throws ResourceNotFoundException if no Album with the given ID has been found
      */
-    public Album get(final Long id) throws ResourceNotFoundException {
+    public Album get(final Long id) {
     	return super.get(id, Album.class);
     }
     /**
      * Deletes the Album by its ID
      * @param id The ID of the Album to be deleted
-     * @throws ResourceNotFoundException if no Album with the given ID has been found
+     * @throws EntityNotFoundException 
      */
-    public void delete(final Long id) throws ResourceNotFoundException {
+    public void delete(final Long id) throws EntityNotFoundException {
     	super.delete(id, Album.class);
     }
     
@@ -62,13 +61,16 @@ public class AlbumsService extends AbstractCrudService<Album> {
     
     
     
-	public Collection<Album> getAlbumsOf(final Long artistId) throws ResourceNotFoundException{
+	public Collection<Album> getAlbumsOf(final Long artistId) {
     	// TODO:
 		return null;
     }
     
-    public Track addTrack(final Long albumId, final Track newTrack) throws ResourceNotFoundException{
+    public Track addTrack(final Long albumId, final Track newTrack) throws EntityNotFoundException {
     	Album album = super.get(albumId, Album.class);
+    	if(album==null) {
+    		throw new EntityNotFoundException(String.format("Coulnd not find the Album with the id: %d! Thus, cannot add tracks to it.", albumId));
+    	}
     	album.getTracks().add(newTrack);
     	super.update(album);
         return newTrack;

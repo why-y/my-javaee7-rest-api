@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import ch.gry.myjavaee7project1.musicshelf.common.boundary.ResourceNotFoundException;
 import ch.gry.myjavaee7project1.musicshelf.common.entity.Model;
 
 /**
@@ -19,7 +18,7 @@ import ch.gry.myjavaee7project1.musicshelf.common.entity.Model;
  * @author yvesgross
  * @param <T>
  */
-public class AbstractCrudService<T extends Model> implements CrudService<T> {
+public class AbstractCrudService<T extends Model> {
 
 	private static final Logger logger = Logger.getLogger(AbstractCrudService.class.getName());
 	
@@ -27,85 +26,81 @@ public class AbstractCrudService<T extends Model> implements CrudService<T> {
     EntityManager em;
     
     /**
-     *
-     * @param startId
+     * Persists the given model object as a new entity. It's id attribute will be ignored.
+     * @param newModel all data of the given model will be saved as a new entity
+     * @return the new entity with it's new ID
+     * @throws EntityNotPersistedException if the given model object could not be persisted.
      */
-    public AbstractCrudService() {
-    }
-    
-    /**
-     *
-     * @param newModel
-     * @return
-     */
-    @Override
-    public T create(final T newModel) {
+    public T create(final T newModel) throws EntityNotPersistedException{
     	logger.info("About to persist the new Model : " + newModel);
+    	// the id of the model must be null, to make sure a new entity will be created
     	newModel.setId(null);
-    	em.persist(newModel);
-    	em.flush();
+    	try{
+    		em.persist(newModel);
+    		em.flush();    		
+    	} catch (Throwable e) {
+    		throw new EntityNotPersistedException(String.format("Could not create the new entity: %s", newModel), e);
+    	}
     	logger.info("Just persisted the new Model. Assigned ID: " + newModel.getId());
         return newModel;
     }
 
     /**
-     *
-     * @return
+     * Returns all entities of the given type
+     * @return all entities of the given type
      */
-    @Override
     public Collection<T> getAll(final Class<T> entityClass) {
     	return em.createQuery("FROM " + entityClass.getName(), entityClass)
     			.getResultList();
     }
 
     /**
-     *
-     * @param id
-     * @return
-     * @throws ResourceNotFoundException
+     * Returns the entity of the given type and ID, or null if no entity could be found
+     * @param id The ID of the requested entity
+     * @param entityClass The class type of the requested entity
+     * @return The requested entity or null if it could not be determined for some reason.
      */
-    @Override
-    public T get(final Long id , final Class<T> entityClass) throws ResourceNotFoundException {
+    public T get(final Long id , final Class<T> entityClass) {
     	try{
     		return em.find(entityClass, id);    		
-    	} catch(IllegalArgumentException e) {
-    		throw new ResourceNotFoundException(e);
+    	} catch (IllegalArgumentException e) {
+    		logger.warning("Cannot get an entity with the given arguments! Thus NULL is returned! Error: " + e.getLocalizedMessage());
+    		return null;
     	}
     }
 
     /**
-     *
-     * @param model
-     * @throws ResourceNotFoundException
+     * Updates the given entity.
+     * @param model The entity to update
+     * @throws EntityNotFoundException If the given entity can not be found.
      */
-    @Override
-    public void update(final T model) throws ResourceNotFoundException {
-    	try {
+    public void update(final T model) throws EntityNotFoundException {
+    	try{
     		em.merge(model);    		
-    	} catch(IllegalArgumentException e) {
-    		throw new ResourceNotFoundException(e);
+    	} catch (IllegalArgumentException e) {
+    		throw new EntityNotFoundException(String.format("Cannot update the entity : %s", model), e);
     	}
     }
 
     /**
-     *
-     * @param id
-     * @throws ResourceNotFoundException
+     * Deletes the entity of the given class type and ID. 
+     * @param id The ID of the entity to be deleted
+     * @param entityClass The class type of the requested entity
+     * @throws EntityNotFoundException If the given entity can not be found.
      */
-    @Override
-    public void delete(final Long id, final Class<T> entityClass) throws ResourceNotFoundException {
+    public void delete(final Long id, final Class<T> entityClass) throws EntityNotFoundException {
     	try {
     		em.remove(em.find(entityClass, id));    		
     	} catch (IllegalArgumentException e) {
-    		throw new ResourceNotFoundException(e);
+    		throw new EntityNotFoundException(String.format("Cannot delete the entity of type:(%s) and ID:%d", entityClass.getName(), id), e);
     	}
     }
 
     /**
-     *
-     * @return
+     * Returns the number of entities of the given entity type
+     * @param entityClass The class type of the entities to be counted
+     * @return The number of entities of the given class type
      */
-    @Override
     public int count(final Class<T> entityClass) {
     	return getAll(entityClass).size();
     }    

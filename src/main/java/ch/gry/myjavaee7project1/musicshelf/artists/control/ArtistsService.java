@@ -10,8 +10,8 @@ import java.util.Collection;
 import javax.enterprise.context.RequestScoped;
 
 import ch.gry.myjavaee7project1.musicshelf.artists.entity.Artist;
-import ch.gry.myjavaee7project1.musicshelf.common.boundary.ResourceNotFoundException;
 import ch.gry.myjavaee7project1.musicshelf.common.control.AbstractCrudService;
+import ch.gry.myjavaee7project1.musicshelf.common.control.EntityNotFoundException;
 
 /**
  *
@@ -32,18 +32,17 @@ public class ArtistsService extends AbstractCrudService<Artist>{
      * Gets a single Artist by its ID
      * @param id The ID of the requested Artist
      * @return The Artist with the given ID
-     * @throws ResourceNotFoundException if no Artist with the given ID has been found
      */
-    public Artist get(final Long id) throws ResourceNotFoundException {
+    public Artist get(final Long id) {
     	return super.get(id, Artist.class);
     }
     
     /**
      * Deletes the Artist by its ID
      * @param id The ID of the Artist to be deleted
-     * @throws ResourceNotFoundException if no Artist with the given ID has been found
+     * @throws EntityNotFoundException if the artist with the given ID cannot be found
      */
-    public void delete(final Long id) throws ResourceNotFoundException {
+    public void delete(final Long id) throws EntityNotFoundException {
     	super.delete(id, Artist.class);
     }
     

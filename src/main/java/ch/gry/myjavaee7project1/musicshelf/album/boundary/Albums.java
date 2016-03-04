@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,7 +21,8 @@ import javax.ws.rs.core.MediaType;
 
 import ch.gry.myjavaee7project1.musicshelf.album.control.AlbumsService;
 import ch.gry.myjavaee7project1.musicshelf.album.entity.Album;
-import ch.gry.myjavaee7project1.musicshelf.common.boundary.ResourceNotFoundException;
+import ch.gry.myjavaee7project1.musicshelf.common.control.EntityNotFoundException;
+import ch.gry.myjavaee7project1.musicshelf.common.control.EntityNotPersistedException;
 import ch.gry.myjavaee7project1.musicshelf.track.boundary.Tracks;
 
 /**
@@ -49,7 +51,11 @@ public class Albums {
     @Produces(MediaType.APPLICATION_JSON)
     public Album createAlbum(final Album newAlbum) {
         logger.info("REST-POST: createAlbum()");
-        return service.create(newAlbum);      
+        try {
+			return service.create(newAlbum);
+		} catch (EntityNotPersistedException e) {
+			throw new BadRequestException(String.format("Could not create the album: %s", newAlbum), e);
+		}      
     }
     
     /**
@@ -73,11 +79,7 @@ public class Albums {
     @Produces(MediaType.APPLICATION_JSON)
     public Album getAlbum(@PathParam("albumId") final Long albumId) {
         logger.info(String.format("REST-GET: getAlbum(%d)", albumId));
-        try {
-            return service.get(albumId);
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
-        }
+        return service.get(albumId);
     }
 
     /**
@@ -90,15 +92,14 @@ public class Albums {
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateAlbum(@PathParam("albumId") final Long albumId, final Album album) {
         logger.info(String.format("REST-PUT: updateAlbum(%d)", albumId));
+        
+        // Make sure to update the object with the id of the resource.
+        // I.e. the id of the given update data is irrelevant.
+        album.setId(albumId);
         try {
-
-            // Make sure to update the object with the id of the resource.
-            // I.e. the id of the given update data is irrelevant.
-            album.setId(albumId);
-
             service.update(album);
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
+        } catch (EntityNotFoundException e) {
+			throw new NotFoundException(String.format("Could not find the album %s to update!", album), e);
         }
     }
 
@@ -112,8 +113,8 @@ public class Albums {
         logger.info(String.format("REST-DELETE: deleteAlbum(%s)", albumId));
         try {
             service.delete(albumId);
-        } catch (ResourceNotFoundException ex) {
-            throw new NotFoundException(ex);
+        } catch (EntityNotFoundException e) {
+			throw new NotFoundException(String.format("Could not find the album with the ID: %d to delete!", albumId), e);
         }
     }
 
