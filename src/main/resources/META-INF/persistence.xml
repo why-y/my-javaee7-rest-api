@@ -6,10 +6,10 @@
 	<persistence-unit name="musicMemDb" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 
-		<class>ch.gry.myjavaee7project1.musicshelf.model.Album</class>
-		<class>ch.gry.myjavaee7project1.musicshelf.model.Artist</class>
-		<class>ch.gry.myjavaee7project1.musicshelf.model.Dummy</class>
-		<class>ch.gry.myjavaee7project1.musicshelf.model.Track</class>
+		<class>ch.gry.myjavaee7project1.musicshelf.album.entity.Album</class>
+		<class>ch.gry.myjavaee7project1.musicshelf.artists.entity.Artist</class>
+		<class>ch.gry.myjavaee7project1.musicshelf.dummy.entity.Dummy</class>
+		<class>ch.gry.myjavaee7project1.musicshelf.track.entity.Track</class>
 		
 		<properties>
 	        <property name="connection.driver_class" value="org.h2.Driver"/>
