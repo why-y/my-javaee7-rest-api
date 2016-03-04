@@ -33,9 +33,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import ch.gry.myjavaee7project1.musicshelf.model.Album;
-import ch.gry.myjavaee7project1.musicshelf.model.Artist;
 import ch.gry.myjavaee7project1.rest.resource.albums.Albums;
-import ch.gry.myjavaee7project1.rest.resource.artists.json.ArtistJsonProvider;
 import ch.gry.myjavaee7project1.rest.resource.json.Link;
 import ch.gry.myjavaee7project1.rest.resource.tracks.Tracks;
 
@@ -74,12 +72,11 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
             throw new BadRequestException("Could not parse title!");
         }
         
-        JsonNumber artistId = jsonObj.getJsonNumber(AlbumJsonKey.ARTIST.getKey());
+        JsonString artistId = jsonObj.getJsonString(AlbumJsonKey.ARTIST.getKey());
         if(artistId==null) {
             throw new BadRequestException("Could not parse artistId!");
         }
-        Artist artist = new Artist();
-        artist.setId(artistId.longValue());
+        String artist = "";
         
         JsonString appearance = jsonObj.getJsonString(AlbumJsonKey.APPEARANCE.getKey());
         if(appearance==null) {
@@ -118,7 +115,7 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
         return Json.createObjectBuilder().
                 add(AlbumJsonKey.ID.getKey(), album.getId() != null ? album.getId().toString() : "").
                 add(AlbumJsonKey.TITLE.getKey(), album.getTitle() != null ? album.getTitle() : "").
-                add(AlbumJsonKey.ARTIST.getKey(), album.getArtist()!= null ? ArtistJsonProvider.toJson(album.getArtist(), uriInfo) : null).
+                add(AlbumJsonKey.ARTIST.getKey(), album.getArtist()!= null ? album.getArtist() : "").
                 add(AlbumJsonKey.APPEARANCE.getKey(), album.getAppearance() != null ? album.getAppearance().toString() : "").
                 add("links", Link.asJsonArray(Arrays.asList(new Link("self", uriInfo.getBaseUriBuilder().
                                 path(Albums.class).

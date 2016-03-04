@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
 /**
@@ -27,18 +29,18 @@ public class Album extends Model{
 	private String Title;
 
 	@Column
-    private Artist artist;
+    private String artist;
 
 	@Column
     private LocalDate appearance;
 
-	@OneToMany
+	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     private List<Track> tracks = new ArrayList<>();
 
     public Album() {
     }
 
-    public Album(String Title, Artist artist, LocalDate appearance) {
+    public Album(String Title, String artist, LocalDate appearance) {
         this.Title = Title;
         this.artist = artist;
         this.appearance = appearance;
@@ -67,7 +69,7 @@ public class Album extends Model{
      *
      * @return the artist
      */
-    public Artist getArtist() {
+    public String getArtist() {
         return artist;
     }
 
@@ -76,7 +78,7 @@ public class Album extends Model{
      *
      * @param artist
      */
-    public void setArtist(Artist artist) {
+    public void setArtist(String artist) {
         this.artist = artist;
     }
 

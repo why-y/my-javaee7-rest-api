@@ -16,7 +16,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 
 import ch.gry.myjavaee7project1.musicshelf.ejb.AlbumsService;
@@ -35,10 +34,10 @@ public class Artists {
     
     private static final Logger logger = Logger.getLogger(Artists.class.getName());
 
-    @Inject // how to properly use @Inject?
+    @Inject
     ArtistsService artistsService;
     
-    @Inject // how to properly use @Inject?
+    @Inject
     AlbumsService albumsService;
     
     /**
@@ -87,12 +86,12 @@ public class Artists {
      * @return
      */
     @GET
-    @Path("{artistId}/discography")
+    @Path("{artistId}/albums")
     @Produces(MediaType.APPLICATION_JSON)
-    public GenericEntity<Collection<Album>> getDiscography(@PathParam("artistId") final Long artistId) {
+    public Collection<Album> getDiscography(@PathParam("artistId") final Long artistId) {
         try {
             logger.info("REST-GET: getDiscography()");
-            return new GenericEntity<Collection<Album>>(albumsService.getAlbumsOf(artistId)){};
+            return albumsService.getAlbumsOf(artistId);
         } catch (ResourceNotFoundException ex) {
             throw new NotFoundException(ex);
         }
@@ -129,7 +128,7 @@ public class Artists {
     public void deleteArtist(@PathParam("artistId") final Long artistId) {
         logger.info(String.format("REST-DELETE: deleteArtist(%s)", artistId));
         try {
-            artistsService.delete(artistId, Artist.class);
+            artistsService.delete(artistId);
         } catch (ResourceNotFoundException ex) {
             throw new NotFoundException(ex);
         }
@@ -145,7 +144,7 @@ public class Artists {
     public JsonObject countArtists() {
         logger.info("REST-GET: countArtists()");
         return Json.createObjectBuilder().
-                add("numOfArtists", artistsService.count(Artist.class)).
+                add("numOfArtists", artistsService.count()).
                 build();
     }
 

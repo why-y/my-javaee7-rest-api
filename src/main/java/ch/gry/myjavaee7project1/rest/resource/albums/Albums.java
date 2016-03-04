@@ -33,7 +33,7 @@ public class Albums {
     
     private static final Logger logger = Logger.getLogger(Albums.class.getName());
 
-    @Inject // how to properly use @Inject?
+    @Inject
     AlbumsService service;
     
     @Inject
@@ -60,7 +60,7 @@ public class Albums {
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<Album> getAlbums() {
         logger.info("REST-GET: getAlbums()");
-        return service.getAll(Album.class);
+        return service.getAll();
     }
 
     /**
@@ -74,7 +74,7 @@ public class Albums {
     public Album getAlbum(@PathParam("albumId") final Long albumId) {
         logger.info(String.format("REST-GET: getAlbum(%d)", albumId));
         try {
-            return service.get(albumId, Album.class);
+            return service.get(albumId);
         } catch (ResourceNotFoundException ex) {
             throw new NotFoundException(ex);
         }
@@ -111,7 +111,7 @@ public class Albums {
     public void deleteAlbum(@PathParam("albumId") final Long albumId) {
         logger.info(String.format("REST-DELETE: deleteAlbum(%s)", albumId));
         try {
-            service.delete(albumId, Album.class);
+            service.delete(albumId);
         } catch (ResourceNotFoundException ex) {
             throw new NotFoundException(ex);
         }
@@ -127,7 +127,7 @@ public class Albums {
     public JsonObject countAlbums() {
         logger.info("REST-GET: countAlbums()");
         return Json.createObjectBuilder().
-                add("numOfAlbums", service.count(Album.class)).
+                add("numOfAlbums", service.count()).
                 build();
     }
 

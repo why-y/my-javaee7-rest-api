@@ -1,6 +1,7 @@
 package ch.gry.myjavaee7project1.rest.resource.tracks;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,9 +50,7 @@ public class Tracks {
     public Track createTrack(@PathParam("albumId") final Long albumId, final Track newTrack) {
         logger.info("REST-POST: createTrack()");
         try {
-            List<Track> tracks = albumService.get(albumId, Album.class).getTracks();
-            tracks.add(newTrack);
-            return newTrack;
+        	return albumService.addTrack(albumId, newTrack);
         } catch (ResourceNotFoundException ex) {
             Logger.getLogger(Tracks.class.getName()).log(Level.SEVERE, null, ex);
             throw new NotFoundException(ex);
@@ -74,17 +73,25 @@ public class Tracks {
      * @param albumId
      * @param trackId
      * @return
+     * @throws ResourceNotFoundException 
      */
     @GET
     @Path("{trackId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Track getTrack(
             @PathParam("albumId") final Long albumId, 
-            @PathParam("trackId") final Long trackId) {
+            @PathParam("trackId") final Long trackId) throws ResourceNotFoundException {
         
         logger.info(String.format("REST-GET: getTrack(%d)", trackId));
-    	// TODO:
-        return null;
+
+        Optional<Track> optionalTrack = albumService.get(albumId).getTracks()
+        		.stream()
+        		.filter(t -> t.getId().equals(trackId))
+        		.findFirst();
+        if (!optionalTrack.isPresent()){
+        	throw new NotFoundException("No Track found with ID : " + trackId);
+        }
+        return optionalTrack.get();
     }
 
     /**

@@ -37,4 +37,20 @@ public class ArtistsService extends AbstractCrudService<Artist>{
     	return super.get(id, Artist.class);
     }
     
+    /**
+     * Deletes the Artist by its ID
+     * @param id The ID of the Artist to be deleted
+     * @throws ResourceNotFoundException if no Artist with the given ID has been found
+     */
+    public void delete(final Long id) throws ResourceNotFoundException {
+    	super.delete(id, Artist.class);
+    }
+    
+    /**
+     * Returns the total number of Artists
+     * @return the total number of Artists
+     */
+    public int count() {
+    	return super.count(Artist.class);
+    }
 }
