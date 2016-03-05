@@ -24,7 +24,7 @@ public class AbstractCrudService<T extends Model> {
     @Inject
     private Logger logger;
 	
-    @PersistenceContext
+    @Inject
     EntityManager em;
     
     /**
