@@ -22,7 +22,8 @@ import ch.gry.myjavaee7project1.musicshelf.track.entity.Track;
 @Startup
 public class DataInitializer {
 	
-	private static final Logger logger = Logger.getLogger(DataInitializer.class.getName());
+    @Inject
+    private Logger logger;
 
 	@Inject
 	DummiesService dummiesService;

@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import ch.gry.myjavaee7project1.musicshelf.common.entity.Model;
 
