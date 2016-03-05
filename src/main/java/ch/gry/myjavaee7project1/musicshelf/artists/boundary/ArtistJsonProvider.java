@@ -13,6 +13,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
@@ -42,7 +43,8 @@ import ch.gry.myjavaee7project1.musicshelf.common.boundary.Link;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ArtistJsonProvider implements MessageBodyReader<Artist>, MessageBodyWriter<Artist> {
 
-    private static final Logger logger = Logger.getLogger(ArtistJsonProvider.class.getName());
+    @Inject
+    private Logger logger;
 
     @Context
     UriInfo uriInfo;

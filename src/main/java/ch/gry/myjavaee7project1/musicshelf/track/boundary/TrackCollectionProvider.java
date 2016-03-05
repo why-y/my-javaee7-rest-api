@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonWriter;
@@ -38,7 +39,8 @@ import ch.gry.myjavaee7project1.musicshelf.track.entity.Track;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TrackCollectionProvider implements MessageBodyWriter<Collection<Track>> {
 
-    private static final Logger logger = Logger.getLogger(TrackCollectionProvider.class.getName());
+    @Inject
+    private Logger logger;
 
     @Context
     UriInfo uriInfo;

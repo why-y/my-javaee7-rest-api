@@ -34,7 +34,8 @@ import ch.gry.myjavaee7project1.musicshelf.common.control.EntityNotPersistedExce
 @Path("artists")
 public class Artists {
     
-    private static final Logger logger = Logger.getLogger(Artists.class.getName());
+    @Inject
+    private Logger logger;
 
     @Inject
     ArtistsService artistsService;

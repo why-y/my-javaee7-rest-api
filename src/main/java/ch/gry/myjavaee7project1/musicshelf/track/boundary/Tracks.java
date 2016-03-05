@@ -32,7 +32,8 @@ import ch.gry.myjavaee7project1.musicshelf.track.entity.Track;
 @Path("")
 public class Tracks {
     
-    private static final Logger logger = Logger.getLogger(Tracks.class.getName());
+    @Inject
+    private Logger logger;
 
     @Inject
     AlbumsService albumService;

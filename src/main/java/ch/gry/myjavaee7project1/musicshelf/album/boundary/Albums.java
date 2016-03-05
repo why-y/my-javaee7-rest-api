@@ -33,7 +33,8 @@ import ch.gry.myjavaee7project1.musicshelf.track.boundary.Tracks;
 @Path("albums")
 public class Albums {
     
-    private static final Logger logger = Logger.getLogger(Albums.class.getName());
+    @Inject
+    private Logger logger;
 
     @Inject
     AlbumsService service;

@@ -21,8 +21,6 @@ import ch.gry.myjavaee7project1.musicshelf.track.entity.Track;
 @RequestScoped
 public class AlbumsService extends AbstractCrudService<Album> {
 
-//    private static final Logger logger = Logger.getLogger(AlbumsService.class.getName());
-
 	/**
 	 * Get all albums
 	 * @return all albums

@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
@@ -45,7 +46,8 @@ import ch.gry.myjavaee7project1.musicshelf.track.boundary.Tracks;
 @Consumes(MediaType.APPLICATION_JSON)
 public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyWriter<Album> {
 
-    private static final Logger logger = Logger.getLogger(AlbumJsonProvider.class.getName());
+    @Inject
+    private Logger logger;
 
     @Context
     UriInfo uriInfo;

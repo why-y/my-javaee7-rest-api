@@ -32,7 +32,8 @@ import ch.gry.myjavaee7project1.musicshelf.dummy.entity.Dummy;
 @Path("dummies")
 public class Dummies {
 
-    private static final Logger logger = Logger.getLogger(Dummies.class.getName());
+    @Inject
+    private Logger logger;
 
     @Inject
     DummiesService dummiesService;

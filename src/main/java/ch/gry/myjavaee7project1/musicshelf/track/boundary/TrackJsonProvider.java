@@ -18,6 +18,8 @@ import java.lang.reflect.Type;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
@@ -45,7 +47,8 @@ import javax.ws.rs.ext.Provider;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TrackJsonProvider implements MessageBodyReader<Track>, MessageBodyWriter<Track> {
 
-    private static final Logger logger = Logger.getLogger(TrackJsonProvider.class.getName());
+    @Inject
+    private Logger logger;
 
     @Context
     UriInfo uriInfo;
