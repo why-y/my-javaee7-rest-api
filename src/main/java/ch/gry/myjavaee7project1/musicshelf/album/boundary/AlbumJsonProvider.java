@@ -114,7 +114,7 @@ public class AlbumJsonProvider implements MessageBodyReader<Album>, MessageBodyW
     
     protected static JsonObject toJson(final Album album, final UriInfo uriInfo) {
         return Json.createObjectBuilder().
-                add(AlbumJsonKey.ID.getKey(), album.getId() != null ? album.getId().toString() : "").
+                add(AlbumJsonKey.ID.getKey(), album.getId() != null ? album.getId() : 0l).
                 add(AlbumJsonKey.TITLE.getKey(), album.getTitle() != null ? album.getTitle() : "").
                 add(AlbumJsonKey.ARTIST.getKey(), album.getArtist()!= null ? album.getArtist() : "").
                 add(AlbumJsonKey.APPEARANCE.getKey(), album.getAppearance() != null ? album.getAppearance().toString() : "").

@@ -28,11 +28,13 @@ public class Artist extends Model{
 	private String origin;
 
     public Artist() {
+    	setId(0l);
     }
     
     public Artist(String Name, String origin) {
         this.name = Name;
         this.origin = origin;
+        setId(0l);
     }
     
     /**

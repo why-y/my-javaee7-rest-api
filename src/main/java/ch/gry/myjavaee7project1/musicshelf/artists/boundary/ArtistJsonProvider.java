@@ -105,7 +105,7 @@ public class ArtistJsonProvider implements MessageBodyReader<Artist>, MessageBod
     
     public static JsonObject toJson(final Artist artist, final UriInfo uriInfo) {
         return Json.createObjectBuilder().
-                add(ArtistJsonKey.ID.getKey(), artist.getId() != null ? artist.getId().toString() : "").
+                add(ArtistJsonKey.ID.getKey(), artist.getId() != null ? artist.getId() : 0l).
                 add(ArtistJsonKey.NAME.getKey(), artist.getName()!= null ? artist.getName() : "").
                 add(ArtistJsonKey.ORIGIN.getKey(), artist.getOrigin() != null ? artist.getOrigin() : "").
                 add("links", Link.asJsonArray(Arrays.asList(new Link("self", uriInfo.getBaseUriBuilder().

@@ -114,7 +114,7 @@ public class TrackJsonProvider implements MessageBodyReader<Track>, MessageBodyW
     protected static JsonObjectBuilder toJson(final Track title, final UriInfo uriInfo) {
         String albumId = uriInfo.getPathParameters().get("albumId").get(0);
         return Json.createObjectBuilder().
-                add(TrackJsonKey.ID.getKey(), title.getId() != null ? title.getId().toString() : "").
+                add(TrackJsonKey.ID.getKey(), title.getId() != null ? title.getId() : 0l).
                 add(TrackJsonKey.TITLE.getKey(), title.getTitle() != null ? title.getTitle() : "").
                 add(TrackJsonKey.DURATION.getKey(), title.getDuration() != null ? title.getDuration().toString() : "").
                 add(TrackJsonKey.TRACK_NO.getKey(), title.getTrackNo() != null ? title.getTrackNo() : 0).

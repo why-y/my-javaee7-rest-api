@@ -81,6 +81,10 @@ public class Artists {
     @Produces(MediaType.APPLICATION_JSON)
     public Artist getArtist(@PathParam("artistId") final Long artistId) {
         logger.info(String.format("REST-GET: getArtist(%d)", artistId));
+        Artist result = artistsService.get(artistId);
+        if(result == null) {
+        	throw new NotFoundException(String.format("No Artist resource found with id:%d", artistId));
+        }
         return artistsService.get(artistId);
     }
     
